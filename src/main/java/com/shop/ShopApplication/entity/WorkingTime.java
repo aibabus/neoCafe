@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.util.Date;
 
 @Data
@@ -17,21 +18,21 @@ import java.util.Date;
 public class WorkingTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long workingTime_id;
-    private Date monday;
-    private Date tuesday;
-    private Date wednesday;
-    private Date thursday;
-    private Date friday;
-    private Date saturday;
-    private Date sunday;
+    private Long workingTime_id;
+    private Time monday;
+    private Time tuesday;
+    private Time wednesday;
+    private Time thursday;
+    private Time friday;
+    private Time saturday;
+    private Time sunday;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @OneToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
 
-    @OneToOne
-    @JoinColumn(name = "filial_id")
-    private Filial filial;
+//    @OneToOne
+//    @JoinColumn(name = "filial_id")
+//    private Filial filial;
 
 }

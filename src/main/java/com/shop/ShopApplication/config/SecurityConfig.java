@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.config;
 
+import com.shop.ShopApplication.JWT.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,9 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
-
-import javax.servlet.Filter;
 
 @Configuration
 @EnableWebSecurity
@@ -32,7 +30,7 @@ public class SecurityConfig {
                                 .hasAuthority("USER")
                                 .antMatchers("/api/product/**")
                                 .hasAuthority("USER")
-                                .antMatchers("/api/auth/**", "/swagger-ui/**","/swagger-ui.html","/swagger-ui/","/v3/api-docs", "/v3/api-docs/swagger-config", "/api/admin/log", "/api/client/auth/*").permitAll()
+                                .antMatchers("/api/auth/**", "/swagger-ui/**","/swagger-ui.html","/swagger-ui/","/v3/api-docs", "/v3/api-docs/swagger-config", "/api/admin/log", "/api/client/auth/*","/api/admin/*").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
@@ -43,4 +41,19 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+//    @Bean
+//    public void addAdmin(){
+//        User user = new User();
+//        // in sake of redeploy to create an admin (test)
+//        if (!userRepository.existsByPhoneNumber("admin")) {
+//            user.setPhoneNumber("admin");
+//            user.setRole(ERole.getRole(1));
+//            user.setActive(true);
+//            user.setCompleted(true);
+//            user.setActivationCode("$2a$12$HZAXhyLTr9r1tS7/JPPOXO.NuXCB9a2KXM7o0OW0ZK40uLPfzdB.6");
+//            userRepository.save(user);
+//        }
+//    }
+
+    //TODO: creating admin if there is no admin
 }

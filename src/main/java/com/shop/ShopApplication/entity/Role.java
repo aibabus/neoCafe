@@ -4,5 +4,5 @@ public enum Role {
     CLIENT,
     ADMIN,
     WAITER,
-    BARMAN
+    BARISTA
 }

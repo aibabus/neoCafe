@@ -1,9 +1,10 @@
 package com.shop.ShopApplication.service.clientService;
 
+import com.shop.ShopApplication.JWT.JwtService;
 import com.shop.ShopApplication.entity.Role;
 import com.shop.ShopApplication.entity.User;
 import com.shop.ShopApplication.entity.VerificationCode;
-import com.shop.ShopApplication.register.ClientRegisterDto;
+import com.shop.ShopApplication.DTO.ClientRegisterDto;
 import com.shop.ShopApplication.repo.UserRepository;
 import com.shop.ShopApplication.repo.VerificationCodeRepository;
 import com.shop.ShopApplication.service.adminService.AdminService;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,18 +21,27 @@ public class ClientServiceImp implements ClientService{
     private final VerificationCodeRepository verificationCodeRepository;
     private final AdminService userService;
     private final UserRepository userRepository;
+    private final JwtService jwtService;
     @Override
     public ClientAuthResponse registerClient(ClientRegisterDto request) {
+         Optional<User> existingUser = userRepository.findByPhoneNumber(request.getPhoneNumber());
+         if(existingUser.isPresent()){
+             return ClientAuthResponse.builder()
+                     .message("Пользователь с таким номером телефона уже существует")
+                     .build();
+         }
+
 
         var user = User.builder()
-                .firstName(request.getFirsName())
+                .firstName(request.getFirstName())
                 .phoneNumber(request.getPhoneNumber())
+                .birthDate(request.getBirthDate())
                 .role(Role.CLIENT)
                 .enabled(true)
                 .build();
         if (user == null) {
             return ClientAuthResponse.builder()
-                    .message("Данные не были сохранены, данные не подошли")
+                    .message("Данные не были сохранены, данные не подходят под формат")
                     .build();
         }
 
@@ -41,27 +52,36 @@ public class ClientServiceImp implements ClientService{
                 .build();
     }
 
-    @Override
-    public boolean verifyPhoneNumber(String phoneNumber, String code) {
-        //TODO: change boolean to response message
+
+
+
+    public ClientAuthResponse login(String phoneNumber, String code) {
 
         VerificationCode verificationCode = verificationCodeRepository.findByPhoneNumber(phoneNumber);
 
         if (verificationCode == null || !verificationCode.getCode().equals(code)) {
-            //TODO: add message
-            return false;
+            return ClientAuthResponse.builder()
+                    .message("Введеный вами код неверен")
+                    .build();
         }
 
         LocalDateTime now = LocalDateTime.now();
         if (now.isAfter(verificationCode.getExpirationTime())) {
-            //TODO: add message
-            return false;
+
+            return ClientAuthResponse.builder()
+                    .message("Введеный вами код устарел")
+                    .build();
+
         }
 
-        verificationCode.setPhoneConfirmedAt(now);
-        verificationCodeRepository.delete(verificationCode);
-        return true;
-    }
-
+            verificationCodeRepository.delete(verificationCode);
+            var user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
+            var jwtToken = jwtService.generateToken(user);
+            return ClientAuthResponse.builder()
+                    .token(jwtToken)
+                    .build();
+        }
 
 }
+
+

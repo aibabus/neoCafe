@@ -17,19 +17,17 @@ import java.util.List;
 public class Filial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long filial_id;
+    private Long filial_id;
     private String name;
     private String address;
     private String mapLink;
     private String phoneNumber;
-
-    @Lob
-    @Column(columnDefinition = "MEDIUMBLOB")
-    private List<String> image;
+    private String image;
+    private boolean isOpen;
 
     @OneToMany(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> users;
 
-    @OneToOne(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private WorkingTime workingTime;
+//    @OneToOne(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private WorkingTime workingTime;
 }

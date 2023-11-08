@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ClientAuthResponse {
     private String message;
+    private String token;
 }
