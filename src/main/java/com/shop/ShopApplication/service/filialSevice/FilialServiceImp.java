@@ -2,6 +2,7 @@ package com.shop.ShopApplication.service.filialSevice;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.shop.ShopApplication.DTO.FilialUpdateDto;
 import com.shop.ShopApplication.DTO.SaveFilialDto;
 import com.shop.ShopApplication.DTO.FilialListDto;
 import com.shop.ShopApplication.DTO.SingleFilialDto;
@@ -49,9 +50,51 @@ public class FilialServiceImp implements FilialService{
                 .image(uploadResult.get("url").toString())
                 .build();
 
-        // Save the Filial entity
+
         filialRepository.save(filial);
         return "Филиал успешно добавлен";
+    }
+
+    @Override
+    public String updateFilial(Long filial_id,
+                               String name,
+                               String address,
+                               String mapLink,
+                               String phoneNumber,
+                               MultipartFile imageFile) throws IOException {
+        Optional<Filial> optionalFilial = filialRepository.findById(filial_id);
+
+        if (optionalFilial.isEmpty()) {
+            return "Филиал с указанным идентификатором не найден";
+        }
+
+        Filial filial = optionalFilial.get();
+
+        if (name != null) {
+            filial.setName(name);
+        }
+        if (address != null) {
+            filial.setAddress(address);
+        }
+        if (mapLink != null) {
+            filial.setMapLink(mapLink);
+        }
+        if (phoneNumber != null) {
+            filial.setPhoneNumber(phoneNumber);
+        }
+        if (imageFile != null) {
+            File file = convert(imageFile);
+            Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+            if (!Files.deleteIfExists(file.toPath())) {
+                throw new IOException("Failed to delete " + file.getName());
+            }
+            System.out.println(uploadResult);
+            filial.setImage(uploadResult.get("url").toString());
+        }
+
+
+        filialRepository.save(filial);
+        return "Информация о филиале успешно обновлена";
     }
 
     public File convert(MultipartFile multipartFile) throws IOException {

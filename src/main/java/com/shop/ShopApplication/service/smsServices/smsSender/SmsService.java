@@ -1,13 +1,18 @@
 package com.shop.ShopApplication.service.smsServices.smsSender;
 
+import com.shop.ShopApplication.DTO.BaristaLoginDto;
 import com.shop.ShopApplication.entity.Role;
 import com.shop.ShopApplication.service.auth.SendCodeResponse;
 import com.shop.ShopApplication.repo.UserRepository;
 import com.shop.ShopApplication.repo.VerificationCodeRepository;
 import com.shop.ShopApplication.entity.User;
 import com.shop.ShopApplication.entity.VerificationCode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,16 +22,19 @@ import java.util.Random;
 
 
 @Service
+@RequiredArgsConstructor
 public class SmsService {
     private final SmsSender smsSender;
     private final VerificationCodeRepository verificationCodeRepository ;
     private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public SmsService(@Qualifier("twilio") TwilioSmsSender smsSender, VerificationCodeRepository verificationCodeRepository,UserRepository userRepository) {
+    public SmsService(@Qualifier("twilio") TwilioSmsSender smsSender, VerificationCodeRepository verificationCodeRepository, UserRepository userRepository, AuthenticationManager authenticationManager) {
         this.smsSender = smsSender;
         this.verificationCodeRepository = verificationCodeRepository;
         this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
     }
 
     public SendCodeResponse sendVerificationCodeLogin(String phoneNumber) {
@@ -52,7 +60,7 @@ public class SmsService {
 
         String message = "Ваш код подтверждения: " + verificationCode;
         SmsRequest smsRequest = new SmsRequest(phoneNumber, message);
-        
+
         try{
             smsSender.sendSms(smsRequest);
             return SendCodeResponse.builder()
@@ -65,7 +73,7 @@ public class SmsService {
         }
     }
 
-
+    
     public SendCodeResponse sendVerificationCodeWaiter(String phoneNumber) {
 
         Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
@@ -115,6 +123,43 @@ public class SmsService {
 
     }
 
+    public SendCodeResponse sendVerificationCodeBarista(BaristaLoginDto request){
+                authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getLogin(),
+                        request.getPassword()
+                ));
+        String verificationCode = generateVerificationCode();
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime expirationTime = currentTime.plusMinutes(5);
+
+        var user = userRepository.findByLogin(request.getLogin()).orElseThrow();
+        String phoneNumber = user.getPhoneNumber();
+
+        VerificationCode Verificationcode = new VerificationCode();
+        Verificationcode.setCode(verificationCode);
+        Verificationcode.setPhoneNumber(phoneNumber);
+        Verificationcode.setExpirationTime(expirationTime);
+        verificationCodeRepository.save(Verificationcode);
+
+        String message = "Ваш код подтверждения: " + verificationCode;
+        SmsRequest smsRequest = new SmsRequest(phoneNumber, message);
+
+        try {
+            System.out.println(smsRequest);
+            smsSender.sendSms(smsRequest);
+            return SendCodeResponse.builder()
+                    .message("Ваш код подтверждения регистрации был успешно отправлен на номер: " + phoneNumber)
+                    .build();
+        } catch (Exception e) {
+
+            return SendCodeResponse.builder()
+                    .message("Данный номер телефона не действителен: " + phoneNumber)
+                    .build();
+        }
+    }
+
+
     public SendCodeResponse sendVerificationCodeRegister(String phoneNumber) {
         String verificationCode = generateVerificationCode();
         LocalDateTime currentTime = LocalDateTime.now();
@@ -136,7 +181,7 @@ public class SmsService {
             return SendCodeResponse.builder()
                     .message("Ваш код подтверждения регистрации был успешно отправлен на номер: " + phoneNumber)
                     .build();
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
 
             return SendCodeResponse.builder()
                     .message("Данный номер телефона не действителен: " + phoneNumber)

@@ -51,7 +51,9 @@ public class ClientController {
 
     }
 
-
-
+    @PostMapping("/client-delete")
+    public ResponseEntity<String> clientDelete(@RequestParam Long user_id){
+        return ResponseEntity.ok(clientService.deleteUser(user_id));
+    }
 
 }

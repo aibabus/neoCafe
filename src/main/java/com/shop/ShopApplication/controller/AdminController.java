@@ -1,9 +1,6 @@
 package com.shop.ShopApplication.controller;
 
-import com.shop.ShopApplication.DTO.AdminLoginDto;
-import com.shop.ShopApplication.DTO.EmployeeList;
-import com.shop.ShopApplication.DTO.EmployeeRegisterDto;
-import com.shop.ShopApplication.DTO.SingleEmployeeDto;
+import com.shop.ShopApplication.DTO.*;
 import com.shop.ShopApplication.service.auth.AuthResponse;
 import com.shop.ShopApplication.service.adminService.AdminService;
 import com.shop.ShopApplication.service.adminService.responses.AdminAuthResponse;
@@ -33,8 +30,19 @@ public class AdminController {
 
     @PostMapping("/employee-registration")
     public ResponseEntity<String> employeeRegistration(@RequestBody EmployeeRegisterDto employeeRegisterDto){
-        return ResponseEntity.ok(adminService.saveWaiter(employeeRegisterDto));
+        return ResponseEntity.ok(adminService.saveEmployee(employeeRegisterDto));
     }
+
+    @PostMapping("/employee-update")
+    public ResponseEntity<String> employeeUpdate(@RequestBody EmployeeUpdateDto employeeRegisterDto){
+        return ResponseEntity.ok(adminService.updateEmployee(employeeRegisterDto));
+    }
+
+    @PostMapping("/employee-delete")
+    public ResponseEntity<String> employeeDelete(@RequestParam Long user_id){
+        return ResponseEntity.ok(adminService.deleteEmployee(user_id));
+    }
+
 
     @GetMapping("/employeeList")
     public ResponseEntity<List<EmployeeList>> getEmployees(){

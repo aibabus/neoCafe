@@ -61,7 +61,7 @@ public class AdminServiceImp implements AdminService {
     }
 
     @Override
-    public String saveWaiter(EmployeeRegisterDto employeeRegisterDto) {
+    public String saveEmployee(EmployeeRegisterDto employeeRegisterDto) {
         Role role = employeeRegisterDto.getRole();
         Optional<Filial> optionalFilial = filialRepository.findById(employeeRegisterDto.getFilial_id());
         Optional<User> optionalUserByPhone = userRepository.findByPhoneNumber(employeeRegisterDto.getPhoneNumber());
@@ -93,10 +93,113 @@ public class AdminServiceImp implements AdminService {
         return "Новый работник успешно добавлен";
     }
 
+//    @Override
+//    public String updateEmployee(EmployeeUpdateDto employeeUpdateDto) {
+//        Role role = employeeUpdateDto.getRole();
+//        Optional<Filial> optionalFilial = filialRepository.findById(employeeUpdateDto.getFilial_id());
+//        Optional<User> optionalUser = userRepository.findById(employeeUpdateDto.getUser_id());
+//
+//        if (optionalUser.isEmpty()) {
+//            return "Пользователь с указанным идентификатором не найден";
+//        }
+//
+//        User user = optionalUser.get();
+//
+//        if (!user.getUser_id().equals(employeeUpdateDto.getUser_id())) {
+//            return "Указанный идентификатор пользователя не совпадает с идентификатором пользователя для обновления.";
+//        }
+//
+//        user.setLogin(employeeUpdateDto.getLogin());
+//        user.setPassword(passwordEncoder.encode(employeeUpdateDto.getPassword()));
+//        user.setFirstName(employeeUpdateDto.getFirstName());
+//        user.setLastName(employeeUpdateDto.getLastName());
+//        user.setRole(role);
+//        user.setBirthDate(employeeUpdateDto.getBirthDate());
+//        user.setPhoneNumber(employeeUpdateDto.getPhoneNumber());
+//
+//        if (optionalFilial.isPresent()) {
+//            Filial filial = optionalFilial.get();
+//            user.setFilial(filial);
+//            userRepository.save(user);
+//            return "Информация о работнике успешно обновлена";
+//        } else {
+//            return "Такого филиала не существует";
+//        }
+//    }
+
+    @Override
+    public String updateEmployee(EmployeeUpdateDto employeeUpdateDto) {
+        Optional<User> optionalUser = userRepository.findById(employeeUpdateDto.getUser_id());
+
+        if (optionalUser.isEmpty()) {
+            return "Пользователь с указанным идентификатором не найден";
+        }
+
+        User user = optionalUser.get();
+
+        if (!user.getUser_id().equals(employeeUpdateDto.getUser_id())) {
+            return "Указанный идентификатор пользователя не совпадает с идентификатором пользователя для обновления.";
+        }
+
+        if (employeeUpdateDto.getPhoneNumber() != null) {
+            Optional<User> userWithNewPhoneNumber = userRepository.findByPhoneNumber(employeeUpdateDto.getPhoneNumber());
+            if (userWithNewPhoneNumber.isPresent() && !userWithNewPhoneNumber.get().getUser_id().equals(user.getUser_id())) {
+                return "Новый номер телефона уже занят другим пользователем.";
+            }
+        }
+
+        if (employeeUpdateDto.getLogin() != null) {
+            user.setLogin(employeeUpdateDto.getLogin());
+        }
+        if (employeeUpdateDto.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(employeeUpdateDto.getPassword()));
+        }
+        if (employeeUpdateDto.getFirstName() != null) {
+            user.setFirstName(employeeUpdateDto.getFirstName());
+        }
+        if (employeeUpdateDto.getLastName() != null) {
+            user.setLastName(employeeUpdateDto.getLastName());
+        }
+        if (employeeUpdateDto.getRole() != null) {
+            user.setRole(employeeUpdateDto.getRole());
+        }
+        if (employeeUpdateDto.getBirthDate() != null) {
+            user.setBirthDate(employeeUpdateDto.getBirthDate());
+        }
+        if (employeeUpdateDto.getPhoneNumber() != null) {
+            user.setPhoneNumber(employeeUpdateDto.getPhoneNumber());
+        }
+
+        if (employeeUpdateDto.getFilial_id() != null) {
+            Optional<Filial> optionalFilial = filialRepository.findById(employeeUpdateDto.getFilial_id());
+            if (optionalFilial.isPresent()) {
+                Filial filial = optionalFilial.get();
+                user.setFilial(filial);
+            } else {
+                return "Такого филиала не существует";
+            }
+        }
+
+        userRepository.save(user);
+        return "Информация о работнике успешно обновлена";
+    }
+
+    @Override
+    public String deleteEmployee(Long user_id) {
+        Optional<User> optionalUser = userRepository.findById(user_id);
+        if(optionalUser.isEmpty()){
+            return "Такого работника не существует";
+        }
+        User user = optionalUser.get();
+        user.setEnabled(false);
+        return "Работник успешно удален";
+    }
+
     @Override
     public List<EmployeeList> employeeList() {
         List<User> employees = userRepository.findWaitersAndBaristas();
         return employees.stream()
+                .filter(User::isEnabled)
                 .map(employee -> {
                     Filial filial = filialRepository.findById(employee.getFilial().getFilial_id()).orElse(null);
                     String filialName = (filial != null) ? filialRepository.findFilialNameByFilialId(filial.getFilial_id()).orElse(null) : null;
@@ -116,6 +219,9 @@ public class AdminServiceImp implements AdminService {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+            if(!user.isEnabled()){
+                return null;
+            }
             Filial filial = user.getFilial();
             String filialName = (filial != null) ? filialRepository.findFilialNameByFilialId(filial.getFilial_id()).orElse(null) : null;
 

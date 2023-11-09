@@ -1,6 +1,7 @@
 package com.shop.ShopApplication.service.filialSevice;
 
 import com.shop.ShopApplication.DTO.FilialListDto;
+import com.shop.ShopApplication.DTO.FilialUpdateDto;
 import com.shop.ShopApplication.DTO.SaveFilialDto;
 import com.shop.ShopApplication.DTO.SingleFilialDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,4 +17,10 @@ public interface FilialService {
                              MultipartFile imageFile) throws IOException;
     public List<FilialListDto> allFilial();
     public SingleFilialDto getFilialDetails(Long filialId);
+    public String updateFilial(Long filial_id,
+                               String name,
+                               String address,
+                               String mapLink,
+                               String phoneNumber,
+                               MultipartFile imageFile) throws IOException;
 }

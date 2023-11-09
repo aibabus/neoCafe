@@ -1,6 +1,7 @@
 package com.shop.ShopApplication.controller;
 
 import com.shop.ShopApplication.DTO.FilialListDto;
+import com.shop.ShopApplication.DTO.FilialUpdateDto;
 import com.shop.ShopApplication.DTO.SaveFilialDto;
 import com.shop.ShopApplication.DTO.SingleFilialDto;
 import com.shop.ShopApplication.service.auth.SendCodeResponse;
@@ -26,6 +27,15 @@ public class FilialController {
                                               @RequestPart MultipartFile imageFile) throws IOException {
         return ResponseEntity.ok(filialService.saveFilial(name, address, mapLink, phoneNumber, imageFile));
     }
+    @PostMapping("/admin/updateFilial")
+    public ResponseEntity<String> updateFilial (@RequestParam Long filial_id, @RequestParam(required = false) String name,
+                                                @RequestParam(required = false) String address,
+                                                @RequestParam(required = false) String mapLink,
+                                                @RequestParam(required = false) String phoneNumber,
+                                                @RequestPart(required = false) MultipartFile imageFile) throws IOException {
+        return ResponseEntity.ok(filialService.updateFilial(filial_id, name, address, mapLink, phoneNumber, imageFile));
+    }
+
     @GetMapping("/filialList")
     public ResponseEntity<List<FilialListDto>> filialList(){
         return ResponseEntity.ok(filialService.allFilial());

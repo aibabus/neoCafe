@@ -55,6 +55,7 @@ public class ClientServiceImp implements ClientService{
 
 
 
+
     public ClientAuthResponse login(String phoneNumber, String code) {
 
         VerificationCode verificationCode = verificationCodeRepository.findByPhoneNumber(phoneNumber);
@@ -80,6 +81,16 @@ public class ClientServiceImp implements ClientService{
             return ClientAuthResponse.builder()
                     .token(jwtToken)
                     .build();
+        }
+        @Override
+        public String deleteUser(Long user_id){
+        Optional<User> optionalUser = userRepository.findById(user_id);
+        if(optionalUser.isEmpty()){
+            return "Такого пользователся не существует";
+        }
+        User user = optionalUser.get();
+        user.setEnabled(false);
+        return "Пользователь удален ";
         }
 
 }
