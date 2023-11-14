@@ -38,7 +38,7 @@ public class AdminController {
         return ResponseEntity.ok(adminService.saveEmployee(employeeRegisterDto));
     }
 
-    @PostMapping("/employee-update")
+    @PutMapping("/employee-update")
     public ResponseEntity<String> employeeUpdate(@RequestBody EmployeeUpdateDto employeeRegisterDto){
         return ResponseEntity.ok(adminService.updateEmployee(employeeRegisterDto));
     }

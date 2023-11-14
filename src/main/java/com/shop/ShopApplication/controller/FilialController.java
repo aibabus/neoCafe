@@ -26,7 +26,7 @@ public class FilialController {
                                               @RequestPart MultipartFile imageFile) throws IOException {
         return ResponseEntity.ok(filialService.saveFilial(name, address, mapLink, phoneNumber, imageFile));
     }
-    @PostMapping("/admin/updateFilial")
+    @PutMapping("/admin/updateFilial")
     public ResponseEntity<String> updateFilial (@RequestParam Long filial_id, @RequestParam(required = false) String name,
                                                 @RequestParam(required = false) String address,
                                                 @RequestParam(required = false) String mapLink,
