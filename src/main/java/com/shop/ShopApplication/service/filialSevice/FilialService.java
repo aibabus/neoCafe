@@ -1,9 +1,9 @@
 package com.shop.ShopApplication.service.filialSevice;
 
-import com.shop.ShopApplication.DTO.FilialListDto;
-import com.shop.ShopApplication.DTO.FilialUpdateDto;
-import com.shop.ShopApplication.DTO.SaveFilialDto;
-import com.shop.ShopApplication.DTO.SingleFilialDto;
+import com.shop.ShopApplication.DTO.filialDTO.FilialListDto;
+import com.shop.ShopApplication.DTO.filialDTO.SingleFilialDto;
+import com.shop.ShopApplication.DTO.filialDTO.WorkingTimeDto;
+import com.shop.ShopApplication.entity.WorkingTime;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

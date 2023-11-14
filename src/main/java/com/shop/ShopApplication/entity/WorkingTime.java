@@ -19,20 +19,20 @@ public class WorkingTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long workingTime_id;
-    private Time monday;
-    private Time tuesday;
-    private Time wednesday;
-    private Time thursday;
-    private Time friday;
-    private Time saturday;
-    private Time sunday;
+    private String monday;
+    private String tuesday;
+    private String wednesday;
+    private String thursday;
+    private String friday;
+    private String saturday;
+    private String sunday;
 
-//    @OneToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-//    @OneToOne
-//    @JoinColumn(name = "filial_id")
-//    private Filial filial;
+    @OneToOne
+    @JoinColumn(name = "filial_id")
+    private Filial filial;
 
 }

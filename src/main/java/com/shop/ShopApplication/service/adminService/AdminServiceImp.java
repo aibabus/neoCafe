@@ -1,8 +1,13 @@
 package com.shop.ShopApplication.service.adminService;
-import com.shop.ShopApplication.DTO.*;
+import com.shop.ShopApplication.DTO.adminDTO.AdminLoginDto;
+import com.shop.ShopApplication.DTO.employeeDTO.EmployeeList;
+import com.shop.ShopApplication.DTO.employeeDTO.EmployeeRegisterDto;
+import com.shop.ShopApplication.DTO.employeeDTO.EmployeeUpdateDto;
+import com.shop.ShopApplication.DTO.employeeDTO.SingleEmployeeDto;
 import com.shop.ShopApplication.JWT.JwtService;
 import com.shop.ShopApplication.entity.Filial;
-import com.shop.ShopApplication.entity.Role;
+import com.shop.ShopApplication.entity.enums.Role;
+import com.shop.ShopApplication.entity.WorkingTime;
 import com.shop.ShopApplication.repo.FilialRepository;
 import com.shop.ShopApplication.service.auth.AuthResponse;
 import com.shop.ShopApplication.repo.UserRepository;
@@ -15,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,7 +67,7 @@ public class AdminServiceImp implements AdminService {
     }
 
     @Override
-    public String saveEmployee(EmployeeRegisterDto employeeRegisterDto) {
+    public String saveEmployee(EmployeeRegisterDto employeeRegisterDto) throws ParseException {
         Role role = employeeRegisterDto.getRole();
         Optional<Filial> optionalFilial = filialRepository.findById(employeeRegisterDto.getFilial_id());
         Optional<User> optionalUserByPhone = userRepository.findByPhoneNumber(employeeRegisterDto.getPhoneNumber());
@@ -76,6 +82,16 @@ public class AdminServiceImp implements AdminService {
         if(optionalFilial.isEmpty()){
             return "Такого филиала не существует";
         }
+        WorkingTime workingTime = WorkingTime.builder()
+                .monday(employeeRegisterDto.getWorkingTimeDto().getMonday())
+                .tuesday(employeeRegisterDto.getWorkingTimeDto().getTuesday())
+                .wednesday(employeeRegisterDto.getWorkingTimeDto().getWednesday())
+                .thursday(employeeRegisterDto.getWorkingTimeDto().getThursday())
+                .friday(employeeRegisterDto.getWorkingTimeDto().getFriday())
+                .saturday(employeeRegisterDto.getWorkingTimeDto().getSaturday())
+                .sunday(employeeRegisterDto.getWorkingTimeDto().getSunday())
+                .build();
+
         Filial filial = optionalFilial.get();
         var user = User.builder()
                 .login(employeeRegisterDto.getLogin())
@@ -85,6 +101,7 @@ public class AdminServiceImp implements AdminService {
                 .role(role)
                 .birthDate(employeeRegisterDto.getBirthDate())
                 .phoneNumber(employeeRegisterDto.getPhoneNumber())
+                .workingTime(workingTime)
                 .filial(filial)
                 .enabled(true)
                 .build();
@@ -92,6 +109,7 @@ public class AdminServiceImp implements AdminService {
 
         return "Новый работник успешно добавлен";
     }
+
 
 //    @Override
 //    public String updateEmployee(EmployeeUpdateDto employeeUpdateDto) {

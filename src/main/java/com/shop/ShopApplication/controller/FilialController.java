@@ -1,10 +1,9 @@
 package com.shop.ShopApplication.controller;
 
-import com.shop.ShopApplication.DTO.FilialListDto;
-import com.shop.ShopApplication.DTO.FilialUpdateDto;
-import com.shop.ShopApplication.DTO.SaveFilialDto;
-import com.shop.ShopApplication.DTO.SingleFilialDto;
-import com.shop.ShopApplication.service.auth.SendCodeResponse;
+import com.shop.ShopApplication.DTO.filialDTO.FilialListDto;
+import com.shop.ShopApplication.DTO.filialDTO.SingleFilialDto;
+import com.shop.ShopApplication.DTO.filialDTO.WorkingTimeDto;
+import com.shop.ShopApplication.entity.WorkingTime;
 import com.shop.ShopApplication.service.filialSevice.FilialService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

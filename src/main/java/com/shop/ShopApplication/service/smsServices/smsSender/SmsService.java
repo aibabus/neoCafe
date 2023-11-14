@@ -1,7 +1,7 @@
 package com.shop.ShopApplication.service.smsServices.smsSender;
 
-import com.shop.ShopApplication.DTO.BaristaLoginDto;
-import com.shop.ShopApplication.entity.Role;
+import com.shop.ShopApplication.DTO.employeeDTO.BaristaLoginDto;
+import com.shop.ShopApplication.entity.enums.Role;
 import com.shop.ShopApplication.service.auth.SendCodeResponse;
 import com.shop.ShopApplication.repo.UserRepository;
 import com.shop.ShopApplication.repo.VerificationCodeRepository;

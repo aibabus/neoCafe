@@ -28,6 +28,7 @@ public class Filial {
     @OneToMany(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> users;
 
-//    @OneToOne(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private WorkingTime workingTime;
+    @OneToOne(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private WorkingTime workingTime;
+
 }

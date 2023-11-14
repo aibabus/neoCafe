@@ -2,12 +2,13 @@ package com.shop.ShopApplication.service.filialSevice;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.shop.ShopApplication.DTO.FilialUpdateDto;
-import com.shop.ShopApplication.DTO.SaveFilialDto;
-import com.shop.ShopApplication.DTO.FilialListDto;
-import com.shop.ShopApplication.DTO.SingleFilialDto;
+import com.shop.ShopApplication.DTO.filialDTO.FilialListDto;
+import com.shop.ShopApplication.DTO.filialDTO.SingleFilialDto;
+import com.shop.ShopApplication.DTO.filialDTO.WorkingTimeDto;
 import com.shop.ShopApplication.entity.Filial;
+import com.shop.ShopApplication.entity.WorkingTime;
 import com.shop.ShopApplication.repo.FilialRepository;
+import com.shop.ShopApplication.repo.WorkingTimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class FilialServiceImp implements FilialService{
     private final FilialRepository filialRepository;
     private final Cloudinary cloudinary;
+    private final WorkingTimeRepository workingTimeRepository;
     private static final Logger log = LoggerFactory.getLogger(FilialServiceImp.class);
 
     @Override
@@ -133,8 +135,6 @@ public class FilialServiceImp implements FilialService{
             return null;
         }
     }
-
-
 
 }
 

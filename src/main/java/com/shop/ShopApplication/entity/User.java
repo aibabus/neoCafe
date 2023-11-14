@@ -1,13 +1,12 @@
 package com.shop.ShopApplication.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.shop.ShopApplication.entity.enums.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +25,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
+    @Column(unique = true)
     private String phoneNumber;
     private String login;
     private String password;
@@ -38,8 +38,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<VerificationCode> verificationCodes;
 
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private WorkingTime workingTime;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private WorkingTime workingTime;
 
     @ManyToOne
     @JoinColumn(name = "filial_id")

@@ -22,7 +22,7 @@ public class TwilioSmsSender implements SmsSender {
     public void sendSms(SmsRequest smsRequest) {
         if (isPhoneNumberValid(smsRequest.getPhoneNumber())) {
             PhoneNumber to = new PhoneNumber(smsRequest.getPhoneNumber());
-            PhoneNumber from = new PhoneNumber(twilioConfig.getTrialNumber());
+            PhoneNumber from = new PhoneNumber(twilioConfig.getServiceSid());
             String message = smsRequest.getMessage();
 
             Message.creator(to, from, message).create();

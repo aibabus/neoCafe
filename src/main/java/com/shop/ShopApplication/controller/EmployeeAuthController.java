@@ -1,10 +1,9 @@
 package com.shop.ShopApplication.controller;
 
-import com.shop.ShopApplication.DTO.BaristaLoginDto;
+import com.shop.ShopApplication.DTO.employeeDTO.BaristaLoginDto;
 import com.shop.ShopApplication.service.auth.AuthResponse;
 import com.shop.ShopApplication.service.auth.AuthService;
 import com.shop.ShopApplication.service.auth.SendCodeResponse;
-import com.shop.ShopApplication.service.clientService.responses.ClientAuthResponse;
 import com.shop.ShopApplication.service.smsServices.smsSender.SmsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
