@@ -92,6 +92,13 @@ public class ClientServiceImp implements ClientService{
         user.setEnabled(false);
         return "Пользователь удален ";
         }
+        @Override
+        public String deleteTest(Long user_id){
+        Optional<User> optionalUser = userRepository.findById(user_id);
+        User user = optionalUser.get();
+        userRepository.delete(user);
+        return "Юзер удален";
+        }
 
 }
 

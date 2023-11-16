@@ -7,4 +7,5 @@ public interface ClientService {
     public ClientAuthResponse registerClient(ClientRegisterDto request);
     public ClientAuthResponse login(String phoneNumber, String code);
     public String deleteUser(Long user_id);
+    public String deleteTest(Long user_id);
 }

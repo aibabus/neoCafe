@@ -56,4 +56,9 @@ public class ClientController {
         return ResponseEntity.ok(clientService.deleteUser(user_id));
     }
 
+    @DeleteMapping("/client-delete-test")
+    public ResponseEntity<String> clientDeleteTest(@RequestParam Long user_id){
+        return ResponseEntity.ok(clientService.deleteTest(user_id));
+    }
+
 }
