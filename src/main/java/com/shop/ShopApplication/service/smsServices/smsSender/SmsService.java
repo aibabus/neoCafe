@@ -65,10 +65,12 @@ public class SmsService {
             smsSender.sendSms(smsRequest);
             return SendCodeResponse.builder()
                     .message("Ваш код подтверждения был успешно отправлен на номер: " + phoneNumber)
+                    .isSucceed(true)
                     .build();
         }catch (Exception e){
             return SendCodeResponse.builder()
                     .message("Данный номер телефона не действителен: " + phoneNumber)
+                    .isSucceed(false)
                     .build();
         }
     }
@@ -81,17 +83,20 @@ public class SmsService {
         if (userOptional.isEmpty()) {
             return SendCodeResponse.builder()
                     .message("Пользователь с таким номером телефона не найден: " + phoneNumber)
+                    .isSucceed(false)
                     .build();
         }
         User user = userOptional.get();
         if(!user.isEnabled()){
             return SendCodeResponse.builder()
                     .message("Официант с таким номером телефона уже не работает: " + phoneNumber)
+                    .isSucceed(false)
                     .build();
         }
         if (user.getRole() != Role.WAITER){
             return SendCodeResponse.builder()
                     .message("Данный пользователь не работает официантом " + phoneNumber)
+                    .isSucceed(false)
                     .build();
         }
 
@@ -112,14 +117,15 @@ public class SmsService {
             smsSender.sendSms(smsRequest);
             return SendCodeResponse.builder()
                     .message("Ваш код подтверждения был успешно отправлен на номер: " + phoneNumber)
+                    .isSucceed(true)
                     .build();
         }catch (Exception e){
 
             return SendCodeResponse.builder()
                     .message("Данный номер телефона не действителен: " + phoneNumber)
+                    .isSucceed(false)
                     .build();
         }
-
 
     }
 
@@ -150,11 +156,13 @@ public class SmsService {
             smsSender.sendSms(smsRequest);
             return SendCodeResponse.builder()
                     .message("Ваш код подтверждения регистрации был успешно отправлен на номер: " + phoneNumber)
+                    .isSucceed(true)
                     .build();
         } catch (Exception e) {
 
             return SendCodeResponse.builder()
                     .message("Данный номер телефона не действителен: " + phoneNumber)
+                    .isSucceed(false)
                     .build();
         }
     }
@@ -180,11 +188,13 @@ public class SmsService {
             smsSender.sendSms(smsRequest);
             return SendCodeResponse.builder()
                     .message("Ваш код подтверждения регистрации был успешно отправлен на номер: " + phoneNumber)
+                    .isSucceed(true)
                     .build();
         } catch (Exception e) {
 
             return SendCodeResponse.builder()
                     .message("Данный номер телефона не действителен: " + phoneNumber)
+                    .isSucceed(false)
                     .build();
         }
 

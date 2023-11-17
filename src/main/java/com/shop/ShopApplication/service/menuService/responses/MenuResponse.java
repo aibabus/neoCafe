@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MenuResponse {
     private String message;
+    private Boolean isSucceed;
 }

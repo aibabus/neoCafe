@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 
 @Service
@@ -33,6 +32,7 @@ public class AuthService {
         if (verificationCode == null || !verificationCode.getCode().equals(code)) {
             return VerificationResponse.builder()
                     .message("Введеный вами код неверен")
+                    .isSucceed(false)
                     .build();
         }
 
@@ -41,14 +41,21 @@ public class AuthService {
 
             return VerificationResponse.builder()
                     .message("Введеный вами код устарел")
+                    .isSucceed(false)
                     .build();
 
         }
 
         verificationCode.setPhoneConfirmedAt(now);
         verificationCodeRepository.delete(verificationCode);
+
+        var user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
         return VerificationResponse.builder()
                 .message("Успешно !")
+                .isSucceed(true)
+                .token(jwtToken)
+                .user(user)
                 .build();
     }
 

@@ -9,6 +9,7 @@ import com.shop.ShopApplication.repo.UserRepository;
 import com.shop.ShopApplication.repo.VerificationCodeRepository;
 import com.shop.ShopApplication.service.adminService.AdminService;
 import com.shop.ShopApplication.service.clientService.responses.ClientAuthResponse;
+import com.shop.ShopApplication.service.clientService.responses.ClientResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ public class ClientServiceImp implements ClientService{
         if (user == null) {
             return ClientAuthResponse.builder()
                     .message("Данные не были сохранены, данные не подходят под формат")
+                    .isSucceed(false)
                     .build();
         }
 
@@ -49,6 +51,7 @@ public class ClientServiceImp implements ClientService{
 
         return ClientAuthResponse.builder()
                 .message("Вы успешно зарегистрированы!!!")
+                .isSucceed(true)
                 .build();
     }
 
@@ -63,6 +66,7 @@ public class ClientServiceImp implements ClientService{
         if (verificationCode == null || !verificationCode.getCode().equals(code)) {
             return ClientAuthResponse.builder()
                     .message("Введеный вами код неверен")
+                    .isSucceed(false)
                     .build();
         }
 
@@ -71,6 +75,7 @@ public class ClientServiceImp implements ClientService{
 
             return ClientAuthResponse.builder()
                     .message("Введеный вами код устарел")
+                    .isSucceed(false)
                     .build();
 
         }
@@ -80,18 +85,27 @@ public class ClientServiceImp implements ClientService{
             var jwtToken = jwtService.generateToken(user);
             return ClientAuthResponse.builder()
                     .token(jwtToken)
+                    .isSucceed(true)
+                    .user(user)
                     .build();
         }
         @Override
-        public String deleteUser(Long user_id){
+        public ClientResponse deleteUser(Long user_id){
         Optional<User> optionalUser = userRepository.findById(user_id);
         if(optionalUser.isEmpty()){
-            return "Такого пользователся не существует";
+            return ClientResponse.builder()
+                    .message("Такого пользователся не существует")
+                    .isSucceed(false)
+                    .build();
         }
         User user = optionalUser.get();
         user.setEnabled(false);
-        return "Пользователь удален ";
+            return ClientResponse.builder()
+                    .message("Пользователь удален ")
+                    .isSucceed(true)
+                    .build();
         }
+
         @Override
         public String deleteTest(Long user_id){
         Optional<User> optionalUser = userRepository.findById(user_id);

@@ -1,5 +1,7 @@
 package com.shop.ShopApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,15 +25,20 @@ public class MenuProduct {
     private String name;
     private Double price;
     private String description;
+    private String image;
     private boolean hasAdditional;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Categories categories;
 
+
     @OneToMany(mappedBy = "menuProduct", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Composition> compositions;
 
+    @ManyToOne
+    @JoinColumn(name = "filial_id")
+    private Filial filial;
 
 
 }

@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SendSmsResponse {
     private String message;
+    private Boolean isSucceed;
 }
