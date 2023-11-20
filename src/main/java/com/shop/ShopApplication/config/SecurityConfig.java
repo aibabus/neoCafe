@@ -36,7 +36,7 @@ public class SecurityConfig {
                                 .hasAuthority("ADMIN")
                                 .antMatchers("/api/filial/admin/**")
                                 .hasAuthority("ADMIN")
-                                .antMatchers("/api/auth/**", "/swagger-ui/**","/swagger-ui.html","/swagger-ui/","/v3/api-docs", "/v3/api-docs/swagger-config", "/api/admin/log", "/api/client/auth/*","/api/admin/*").permitAll()
+                                .antMatchers("/api/admin/saveAdmin","/api/auth/**", "/swagger-ui/**","/swagger-ui.html","/swagger-ui/","/v3/api-docs", "/v3/api-docs/swagger-config", "/api/admin/log", "/api/client/auth/*","/api/admin/*").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
