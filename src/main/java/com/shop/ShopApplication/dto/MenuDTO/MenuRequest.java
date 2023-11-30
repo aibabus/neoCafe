@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.dto.MenuDTO;
 
+import com.shop.ShopApplication.entity.Doping;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +19,6 @@ public class MenuRequest {
     private String description;
     private Long filialId;
     private List<CompositionRequest> composition;
+    private List<DopingRequest> dopings;
 }
 

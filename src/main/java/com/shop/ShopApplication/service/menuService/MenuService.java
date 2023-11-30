@@ -18,6 +18,7 @@ public interface MenuService {
     public MenuResponse addImageToMenuProduct(Long productId, MultipartFile imageFile) throws IOException;
     public MenuResponse updateMenuItemWithComposition(Long productId, MenuRequest menuRequest) throws IOException;
     public MenuResponse deleteMenuProduct(Long productId);
+    public MenuResponse getMenuProductById(Long productId);
     public List<MenuProductDto> getMenuProducts(Long categoryId);
     public List<MenuProductDto> getAllMenuProducts();
     public List<MenuProductDto> getMenuProductsByCategoryAndFilial(

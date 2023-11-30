@@ -18,6 +18,7 @@ public class MenuProductDto {
     private boolean hasAdditional;
     private Long categoryId;
     private List<CompositionDto> compositions;
+    private List<DopingDto> dopings;
     private Long filialId;
 
 

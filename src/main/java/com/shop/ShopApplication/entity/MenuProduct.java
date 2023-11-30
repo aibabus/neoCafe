@@ -2,6 +2,8 @@ package com.shop.ShopApplication.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,14 +32,21 @@ public class MenuProduct {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private Categories categories;
 
 
     @OneToMany(mappedBy = "menuProduct", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Composition> compositions;
+
+    @OneToMany(mappedBy = "menuProduct", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Doping> dopings;
 
     @ManyToOne
     @JoinColumn(name = "filial_id")
+    @JsonBackReference
     private Filial filial;
 
 

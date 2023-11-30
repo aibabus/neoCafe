@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.service.menuService.responses;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.shop.ShopApplication.entity.MenuProduct;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -3,6 +3,7 @@ package com.shop.ShopApplication.controller;
 import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
 import com.shop.ShopApplication.dto.MenuDTO.MenuRequest;
 import com.shop.ShopApplication.entity.Categories;
+import com.shop.ShopApplication.entity.MenuProduct;
 import com.shop.ShopApplication.service.menuService.MenuService;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,10 @@ public class MenuController {
     }
 
 
+    @GetMapping("/admin/getSingleMenuProduct")
+    public ResponseEntity<MenuResponse> getSingleMenuProduct(@RequestParam Long product_id){
+        return ResponseEntity.ok(menuService.getMenuProductById(product_id));
+    }
 
 
     @GetMapping("/admin/allMenuByCategory")
@@ -85,11 +90,15 @@ public class MenuController {
         return ResponseEntity.ok(menuProducts);
     }
 
+
+    @GetMapping("/client/getSingleMenuProduct")
+    public ResponseEntity<MenuResponse> getSingleMenuProductClient(@RequestParam Long product_id){
+        return ResponseEntity.ok(menuService.getMenuProductById(product_id));
+    }
     @GetMapping("/client/allCategory")
     public ResponseEntity<List<Categories>> allCategoryClient(){
         return ResponseEntity.ok(menuService.getAllCategories());
     }
-
     @GetMapping("/client/allMenuByCategory")
     public ResponseEntity<List<MenuProductDto>> getAllMenuProductsByCategoryClient(@RequestParam Long category_id) {
         List<MenuProductDto> menuProducts = menuService.getMenuProducts(category_id);

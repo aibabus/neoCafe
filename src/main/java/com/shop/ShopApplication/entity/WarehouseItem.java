@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shop.ShopApplication.entity.enums.StockCategory;
 import com.shop.ShopApplication.entity.enums.Unit;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,7 @@ public class WarehouseItem {
 
     @ManyToOne
     @JoinColumn(name = "filial_id")
+    @JsonBackReference
     private Filial filial;
 
 }

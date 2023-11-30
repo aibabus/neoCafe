@@ -139,13 +139,18 @@ public class MenuServiceImp implements MenuService{
                 .price(menuRequest.getPrice())
                 .description(menuRequest.getDescription())
                 .filial(filial)
-//                .image(uploadResult.get("url").toString())
                 .build();
 
         List<Composition> compositions = new ArrayList<>();
-        for (CompositionRequest compositionRequest : menuRequest.getComposition()) {
-            Optional<WarehouseItem> optionalItem = warehouseRepository.findById(compositionRequest.getItemId());
-            if (optionalItem.isPresent()) {
+        if (menuRequest.getComposition() != null && !menuRequest.getComposition().isEmpty()) {
+            for (CompositionRequest compositionRequest : menuRequest.getComposition()) {
+                Optional<WarehouseItem> optionalItem = warehouseRepository.findById(compositionRequest.getItemId());
+                if (optionalItem.isEmpty()) {
+                    return MenuResponse.builder()
+                            .message("Такого продукта на складе нет!")
+                            .isSucceed(false)
+                            .build();
+                }
                 Composition composition = Composition.builder()
                         .quantity(compositionRequest.getQuantity())
                         .unit(compositionRequest.getUnit())
@@ -153,15 +158,34 @@ public class MenuServiceImp implements MenuService{
                         .items(Collections.singletonList(optionalItem.get()))
                         .build();
                 compositions.add(composition);
-            } else {
-                return MenuResponse.builder()
-                        .message("Такого продукта на складе нет !")
-                        .isSucceed(false)
+            }
+        }
+
+        List<Doping> dopings = new ArrayList<>();
+        if (menuRequest.getDopings() != null && !menuRequest.getDopings().isEmpty()) {
+            for (DopingRequest dopingRequest : menuRequest.getDopings()) {
+                Optional<WarehouseItem> optionalItem = warehouseRepository.findById(dopingRequest.getItemId());
+
+                if (optionalItem.isEmpty()) {
+                    return MenuResponse.builder()
+                            .message("Такого продукта на складе нет !")
+                            .isSucceed(false)
+                            .build();
+                }
+
+                Doping doping = Doping.builder()
+                        .quantity(dopingRequest.getQuantity())
+                        .unit(dopingRequest.getUnit())
+                        .menuProduct(product)
+                        .price(dopingRequest.getPrice())
+                        .items(Collections.singletonList(optionalItem.get()))
                         .build();
+                dopings.add(doping);
             }
         }
 
         product.setCompositions(compositions);
+        product.setDopings(dopings);
         menuRepository.save(product);
 
         return MenuResponse.builder()
@@ -208,7 +232,12 @@ public class MenuServiceImp implements MenuService{
     public MenuResponse updateMenuItemWithComposition(Long productId, MenuRequest menuRequest) throws IOException {
         Optional<MenuProduct> optionalProduct = menuRepository.findById(productId);
 
-        if (optionalProduct.isPresent()) {
+        if (optionalProduct.isEmpty()) {
+            return MenuResponse.builder()
+                    .message("Продукт с указанным ID не найден!")
+                    .isSucceed(false)
+                    .build();
+        }
             MenuProduct product = optionalProduct.get();
 
             if (menuRequest.getName() != null) {
@@ -235,7 +264,12 @@ public class MenuServiceImp implements MenuService{
                 List<Composition> compositions = new ArrayList<>();
                 for (CompositionRequest compositionRequest : menuRequest.getComposition()) {
                     Optional<WarehouseItem> optionalItem = warehouseRepository.findById(compositionRequest.getItemId());
-                    if (optionalItem.isPresent()) {
+                    if (optionalItem.isEmpty()) {
+                        return MenuResponse.builder()
+                                .message("Такого продукта на складе нет!")
+                                .isSucceed(false)
+                                .build();
+                    }
                         Composition composition = Composition.builder()
                                 .quantity(compositionRequest.getQuantity())
                                 .unit(compositionRequest.getUnit())
@@ -243,29 +277,63 @@ public class MenuServiceImp implements MenuService{
                                 .items(Collections.singletonList(optionalItem.get()))
                                 .build();
                         compositions.add(composition);
-                    } else {
-                        return MenuResponse.builder()
-                                .message("Такого продукта на складе нет!")
-                                .isSucceed(false)
-                                .build();
-                    }
+
                 }
 
                 product.setCompositions(compositions);
             }
 
-            menuRepository.save(product);
+        if (menuRequest.getDopings() != null && !menuRequest.getDopings().isEmpty()) {
+            List<Doping> dopings = new ArrayList<>();
 
+            for (DopingRequest dopingRequest : menuRequest.getDopings()) {
+                Optional<WarehouseItem> optionalItem = warehouseRepository.findById(dopingRequest.getItemId());
+
+                if (optionalItem.isEmpty()) {
+                    return MenuResponse.builder()
+                            .message("Такого продукта на складе нет!")
+                            .isSucceed(false)
+                            .build();
+                }
+
+                Doping doping = Doping.builder()
+                        .quantity(dopingRequest.getQuantity())
+                        .unit(dopingRequest.getUnit())
+                        .menuProduct(product)
+                        .price(dopingRequest.getPrice())
+                        .items(Collections.singletonList(optionalItem.get()))
+                        .build();
+
+                dopings.add(doping);
+            }
+            product.setDopings(dopings);
+        }
+
+            menuRepository.save(product);
             return MenuResponse.builder()
                     .message("Продукт с композицией успешно обновлен!")
                     .isSucceed(true)
                     .build();
-        } else {
+        }
+
+    @Override
+    public MenuResponse getMenuProductById(Long productId) {
+        Optional<MenuProduct> optionalProduct = menuRepository.findById(productId);
+
+        if (optionalProduct.isEmpty()) {
             return MenuResponse.builder()
                     .message("Продукт с указанным ID не найден!")
                     .isSucceed(false)
                     .build();
         }
+
+        MenuProduct product = optionalProduct.get();
+
+        return MenuResponse.builder()
+                .message("Продукт успешно найден!")
+                .isSucceed(true)
+                .menuProduct(product)
+                .build();
     }
 
     @Override

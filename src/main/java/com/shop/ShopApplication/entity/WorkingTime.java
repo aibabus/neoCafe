@@ -35,6 +35,7 @@ public class WorkingTime {
 
     @OneToOne
     @JoinColumn(name = "filial_id")
+    @JsonBackReference
     private Filial filial;
 
 }

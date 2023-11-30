@@ -16,13 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "composition")
-public class Composition {
+@Table(name = "doping")
+public class Doping {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long composition_id;
+    private Long doping_id;
     private Double quantity;
     private Unit unit;
+    private Double price;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -31,11 +32,10 @@ public class Composition {
 
     @ManyToMany
     @JoinTable(
-            name = "composition_item",
-            joinColumns = @JoinColumn(name = "composition_id"),
+            name = "doping_item",
+            joinColumns = @JoinColumn(name = "doping_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id")
     )
     private List<WarehouseItem> items;
 
 }
-

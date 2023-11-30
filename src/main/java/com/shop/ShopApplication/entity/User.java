@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.shop.ShopApplication.entity.enums.Role;
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<VerificationCode> verificationCodes;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -46,6 +48,7 @@ public class User implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "filial_id")
+    @JsonBackReference
     private Filial filial;
 
 
