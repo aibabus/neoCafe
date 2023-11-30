@@ -1,12 +1,11 @@
 package com.shop.ShopApplication.service.auth;
 
-import com.shop.ShopApplication.JWT.JwtService;
+import com.shop.ShopApplication.jwt.JwtService;
 
 import com.shop.ShopApplication.entity.VerificationCode;
 import com.shop.ShopApplication.repo.VerificationCodeRepository;
 import com.shop.ShopApplication.service.adminService.AdminService;
 import com.shop.ShopApplication.repo.UserRepository;
-import com.shop.ShopApplication.service.clientService.responses.ClientAuthResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;

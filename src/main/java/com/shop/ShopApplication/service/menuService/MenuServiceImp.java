@@ -2,7 +2,7 @@ package com.shop.ShopApplication.service.menuService;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.shop.ShopApplication.DTO.MenuDTO.*;
+import com.shop.ShopApplication.dto.MenuDTO.*;
 import com.shop.ShopApplication.entity.*;
 import com.shop.ShopApplication.repo.*;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
@@ -167,6 +167,7 @@ public class MenuServiceImp implements MenuService{
         return MenuResponse.builder()
                 .message("Новый продукт с композицией был успешно добавлен в меню !")
                 .isSucceed(true)
+                .menuProduct(product)
                 .build();
     }
 

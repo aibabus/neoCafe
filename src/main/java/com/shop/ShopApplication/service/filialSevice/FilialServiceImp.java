@@ -2,13 +2,16 @@ package com.shop.ShopApplication.service.filialSevice;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.shop.ShopApplication.DTO.filialDTO.FilialListDto;
-import com.shop.ShopApplication.DTO.filialDTO.SingleFilialDto;
-import com.shop.ShopApplication.DTO.filialDTO.WorkingTimeDto;
+import com.shop.ShopApplication.dto.filialDTO.FilialListDto;
+import com.shop.ShopApplication.dto.filialDTO.SaveFilialDto;
+import com.shop.ShopApplication.dto.filialDTO.SingleFilialDto;
 import com.shop.ShopApplication.entity.Filial;
+import com.shop.ShopApplication.entity.MenuProduct;
 import com.shop.ShopApplication.entity.WorkingTime;
 import com.shop.ShopApplication.repo.FilialRepository;
 import com.shop.ShopApplication.repo.WorkingTimeRepository;
+import com.shop.ShopApplication.service.filialSevice.responses.FilialResponse;
+import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,33 +32,72 @@ public class FilialServiceImp implements FilialService{
     private static final Logger log = LoggerFactory.getLogger(FilialServiceImp.class);
 
     @Override
-    public String saveFilial(String name,
-                             String address,
-                             String mapLink,
-                             String phoneNumber,
-                             MultipartFile imageFile) throws IOException {
-
-        File file = convert(imageFile);
-
-        Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-        if(!Files.deleteIfExists(file.toPath())){
-            throw new IOException("Failed to delete" + file.getName());
+    public FilialResponse saveFilial(SaveFilialDto filialRequest) throws IOException {
+        WorkingTime workingTime = WorkingTime.builder()
+                .monday(filialRequest.getWorkingTimeDto().getMonday())
+                .tuesday(filialRequest.getWorkingTimeDto().getTuesday())
+                .wednesday(filialRequest.getWorkingTimeDto().getWednesday())
+                .thursday(filialRequest.getWorkingTimeDto().getThursday())
+                .friday(filialRequest.getWorkingTimeDto().getFriday())
+                .saturday(filialRequest.getWorkingTimeDto().getSaturday())
+                .sunday(filialRequest.getWorkingTimeDto().getSunday())
+                .build();
+        if (workingTime == null){
+            return FilialResponse.builder()
+                    .message("Нужно добавить время работы !")
+                    .isSucceed(false)
+                    .build();
         }
-        System.out.println(uploadResult);
-
 
         Filial filial = Filial.builder()
-                .name(name)
-                .address(address)
-                .mapLink(mapLink)
-                .phoneNumber(phoneNumber)
-                .image(uploadResult.get("url").toString())
+                .name(filialRequest.getName())
+                .address(filialRequest.getAddress())
+                .mapLink(filialRequest.getMapLink())
+                .phoneNumber(filialRequest.getPhoneNumber())
+                .workingTime(workingTime)
                 .build();
 
-
+        workingTime.setFilial(filial);
         filialRepository.save(filial);
-        return "Филиал успешно добавлен";
+        return FilialResponse.builder()
+                .message("Филиал успешно добавлен")
+                .isSucceed(true)
+                .filial(filial)
+                .build();
     }
+
+    @Override
+    public FilialResponse saveFilialImage(Long filialId, MultipartFile imageFile) throws IOException {
+
+        Optional<Filial> optionalFilial = filialRepository.findById(filialId);
+        if (optionalFilial.isEmpty()) {
+            return FilialResponse.builder()
+                    .message("Филиал с указанным ID не найден!")
+                    .isSucceed(false)
+                    .build();
+        }
+
+            Filial filial = optionalFilial.get();
+            File file = convert(imageFile);
+
+            // Upload the image to Cloudinary
+            Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+
+            // Delete the temporary file
+            if (!Files.deleteIfExists(file.toPath())) {
+                throw new IOException("Ошибка при удалении " + file.getName());
+            }
+
+            // Update the product with the new image URL
+            filial.setImage(uploadResult.get("url").toString());
+            filialRepository.save(filial);
+
+            return FilialResponse.builder()
+                    .message("Изображение успешно добавлено к филиалу!")
+                    .isSucceed(true)
+                    .build();
+    }
+
 
     @Override
     public String updateFilial(Long filial_id,
@@ -99,6 +141,7 @@ public class FilialServiceImp implements FilialService{
         return "Информация о филиале успешно обновлена";
     }
 
+
     public File convert(MultipartFile multipartFile) throws IOException {
         File file = new File(Objects.requireNonNull(multipartFile.getName()));
         FileOutputStream fo = new FileOutputStream(file);
@@ -106,6 +149,7 @@ public class FilialServiceImp implements FilialService{
         fo.close();
         return file;
      }
+
     @Override
     public List<FilialListDto> allFilial(){
         List<Filial> filials = filialRepository.findAll();

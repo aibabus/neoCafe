@@ -1,13 +1,12 @@
 package com.shop.ShopApplication.service.adminService;
-import com.shop.ShopApplication.DTO.adminDTO.AdminLoginDto;
-import com.shop.ShopApplication.DTO.employeeDTO.EmployeeList;
-import com.shop.ShopApplication.DTO.employeeDTO.EmployeeRegisterDto;
-import com.shop.ShopApplication.DTO.employeeDTO.EmployeeUpdateDto;
-import com.shop.ShopApplication.DTO.employeeDTO.SingleEmployeeDto;
+import com.shop.ShopApplication.dto.adminDTO.AdminLoginDto;
+import com.shop.ShopApplication.dto.employeeDTO.EmployeeList;
+import com.shop.ShopApplication.dto.employeeDTO.EmployeeRegisterDto;
+import com.shop.ShopApplication.dto.employeeDTO.EmployeeUpdateDto;
+import com.shop.ShopApplication.dto.employeeDTO.SingleEmployeeDto;
 import com.shop.ShopApplication.service.auth.AuthResponse;
 import com.shop.ShopApplication.service.adminService.responses.AdminAuthResponse;
 
-import java.sql.Time;
 import java.text.ParseException;
 import java.util.List;
 

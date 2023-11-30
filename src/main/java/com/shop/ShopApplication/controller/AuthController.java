@@ -1,6 +1,6 @@
 package com.shop.ShopApplication.controller;
 
-import com.shop.ShopApplication.DTO.clientDTO.ClientRegisterDto;
+import com.shop.ShopApplication.dto.clientDTO.ClientRegisterDto;
 import com.shop.ShopApplication.service.auth.AuthService;
 import com.shop.ShopApplication.service.auth.SendCodeResponse;
 import com.shop.ShopApplication.service.auth.VerificationResponse;

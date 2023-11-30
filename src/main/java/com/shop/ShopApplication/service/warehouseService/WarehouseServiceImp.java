@@ -1,7 +1,7 @@
 package com.shop.ShopApplication.service.warehouseService;
 
-import com.shop.ShopApplication.DTO.warehouseDTO.SaveWarehouseItemDto;
-import com.shop.ShopApplication.DTO.warehouseDTO.WarehouseItemList;
+import com.shop.ShopApplication.dto.warehouseDTO.SaveWarehouseItemDto;
+import com.shop.ShopApplication.dto.warehouseDTO.WarehouseItemList;
 import com.shop.ShopApplication.entity.Filial;
 import com.shop.ShopApplication.entity.WarehouseItem;
 import com.shop.ShopApplication.entity.enums.StockCategory;

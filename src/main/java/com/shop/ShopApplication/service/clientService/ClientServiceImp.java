@@ -1,10 +1,10 @@
 package com.shop.ShopApplication.service.clientService;
 
-import com.shop.ShopApplication.JWT.JwtService;
+import com.shop.ShopApplication.jwt.JwtService;
 import com.shop.ShopApplication.entity.enums.Role;
 import com.shop.ShopApplication.entity.User;
 import com.shop.ShopApplication.entity.VerificationCode;
-import com.shop.ShopApplication.DTO.clientDTO.ClientRegisterDto;
+import com.shop.ShopApplication.dto.clientDTO.ClientRegisterDto;
 import com.shop.ShopApplication.repo.UserRepository;
 import com.shop.ShopApplication.repo.VerificationCodeRepository;
 import com.shop.ShopApplication.service.adminService.AdminService;

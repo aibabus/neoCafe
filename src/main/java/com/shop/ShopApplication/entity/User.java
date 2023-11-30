@@ -1,5 +1,7 @@
 package com.shop.ShopApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.shop.ShopApplication.entity.enums.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,6 +41,7 @@ public class User implements UserDetails {
     private Set<VerificationCode> verificationCodes;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private WorkingTime workingTime;
 
     @ManyToOne

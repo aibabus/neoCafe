@@ -1,8 +1,7 @@
 package com.shop.ShopApplication.service.menuService;
 
-import com.shop.ShopApplication.DTO.MenuDTO.MenuProductDto;
-import com.shop.ShopApplication.DTO.MenuDTO.MenuProductResponse;
-import com.shop.ShopApplication.DTO.MenuDTO.MenuRequest;
+import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
+import com.shop.ShopApplication.dto.MenuDTO.MenuRequest;
 import com.shop.ShopApplication.entity.Categories;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
 import org.springframework.web.multipart.MultipartFile;

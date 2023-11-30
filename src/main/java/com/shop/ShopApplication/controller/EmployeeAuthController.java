@@ -1,6 +1,6 @@
 package com.shop.ShopApplication.controller;
 
-import com.shop.ShopApplication.DTO.employeeDTO.BaristaLoginDto;
+import com.shop.ShopApplication.dto.employeeDTO.BaristaLoginDto;
 import com.shop.ShopApplication.service.auth.AuthResponse;
 import com.shop.ShopApplication.service.auth.AuthService;
 import com.shop.ShopApplication.service.auth.SendCodeResponse;

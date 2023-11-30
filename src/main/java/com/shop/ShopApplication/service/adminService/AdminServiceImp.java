@@ -1,14 +1,15 @@
 package com.shop.ShopApplication.service.adminService;
-import com.shop.ShopApplication.DTO.adminDTO.AdminLoginDto;
-import com.shop.ShopApplication.DTO.employeeDTO.EmployeeList;
-import com.shop.ShopApplication.DTO.employeeDTO.EmployeeRegisterDto;
-import com.shop.ShopApplication.DTO.employeeDTO.EmployeeUpdateDto;
-import com.shop.ShopApplication.DTO.employeeDTO.SingleEmployeeDto;
-import com.shop.ShopApplication.JWT.JwtService;
+import com.shop.ShopApplication.dto.adminDTO.AdminLoginDto;
+import com.shop.ShopApplication.dto.employeeDTO.EmployeeList;
+import com.shop.ShopApplication.dto.employeeDTO.EmployeeRegisterDto;
+import com.shop.ShopApplication.dto.employeeDTO.EmployeeUpdateDto;
+import com.shop.ShopApplication.dto.employeeDTO.SingleEmployeeDto;
+import com.shop.ShopApplication.jwt.JwtService;
 import com.shop.ShopApplication.entity.Filial;
 import com.shop.ShopApplication.entity.enums.Role;
 import com.shop.ShopApplication.entity.WorkingTime;
 import com.shop.ShopApplication.repo.FilialRepository;
+import com.shop.ShopApplication.repo.WorkingTimeRepository;
 import com.shop.ShopApplication.service.auth.AuthResponse;
 import com.shop.ShopApplication.repo.UserRepository;
 import com.shop.ShopApplication.repo.VerificationCodeRepository;
@@ -35,6 +36,7 @@ public class AdminServiceImp implements AdminService {
     private final UserRepository userRepository;
     private final VerificationCodeRepository verificationCodeRepository;
     private final FilialRepository filialRepository;
+    private final WorkingTimeRepository workingTimeRepository;
 
 
     @Override
@@ -105,45 +107,15 @@ public class AdminServiceImp implements AdminService {
                 .filial(filial)
                 .enabled(true)
                 .build();
+
+        workingTime.setUser(user);
         userRepository.save(user);
 
         return "Новый работник успешно добавлен";
     }
 
 
-//    @Override
-//    public String updateEmployee(EmployeeUpdateDto employeeUpdateDto) {
-//        Role role = employeeUpdateDto.getRole();
-//        Optional<Filial> optionalFilial = filialRepository.findById(employeeUpdateDto.getFilial_id());
-//        Optional<User> optionalUser = userRepository.findById(employeeUpdateDto.getUser_id());
-//
-//        if (optionalUser.isEmpty()) {
-//            return "Пользователь с указанным идентификатором не найден";
-//        }
-//
-//        User user = optionalUser.get();
-//
-//        if (!user.getUser_id().equals(employeeUpdateDto.getUser_id())) {
-//            return "Указанный идентификатор пользователя не совпадает с идентификатором пользователя для обновления.";
-//        }
-//
-//        user.setLogin(employeeUpdateDto.getLogin());
-//        user.setPassword(passwordEncoder.encode(employeeUpdateDto.getPassword()));
-//        user.setFirstName(employeeUpdateDto.getFirstName());
-//        user.setLastName(employeeUpdateDto.getLastName());
-//        user.setRole(role);
-//        user.setBirthDate(employeeUpdateDto.getBirthDate());
-//        user.setPhoneNumber(employeeUpdateDto.getPhoneNumber());
-//
-//        if (optionalFilial.isPresent()) {
-//            Filial filial = optionalFilial.get();
-//            user.setFilial(filial);
-//            userRepository.save(user);
-//            return "Информация о работнике успешно обновлена";
-//        } else {
-//            return "Такого филиала не существует";
-//        }
-//    }
+
 
     @Override
     public String updateEmployee(EmployeeUpdateDto employeeUpdateDto) {
@@ -235,13 +207,19 @@ public class AdminServiceImp implements AdminService {
     @Override
     public SingleEmployeeDto getEmployeeDetails(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
+        if (optionalUser.isEmpty()) {
+            return null;
+        }
             User user = optionalUser.get();
             if(!user.isEnabled()){
                 return null;
             }
             Filial filial = user.getFilial();
             String filialName = (filial != null) ? filialRepository.findFilialNameByFilialId(filial.getFilial_id()).orElse(null) : null;
+
+        Optional<WorkingTime> optionalWorkingTime = workingTimeRepository.findByUser(user.getUser_id());
+        WorkingTime workingTime = optionalWorkingTime.orElse(null);
+
 
             return SingleEmployeeDto.builder()
                     .login(user.getLogin())
@@ -251,11 +229,9 @@ public class AdminServiceImp implements AdminService {
                     .role(user.getRole())
                     .birthDate(user.getBirthDate())
                     .phoneNumber(user.getPhoneNumber())
-                    .filial_id(user.getFilial().getFilial_id())
+                    .filialName(filialName)
+                    .workingTime(workingTime)
                     .build();
-        } else {
-
-            return null;
         }
     }
 
@@ -281,4 +257,4 @@ public class AdminServiceImp implements AdminService {
 
 
 
-}
+

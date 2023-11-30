@@ -1,7 +1,7 @@
 package com.shop.ShopApplication.service.warehouseService;
 
-import com.shop.ShopApplication.DTO.warehouseDTO.SaveWarehouseItemDto;
-import com.shop.ShopApplication.DTO.warehouseDTO.WarehouseItemList;
+import com.shop.ShopApplication.dto.warehouseDTO.SaveWarehouseItemDto;
+import com.shop.ShopApplication.dto.warehouseDTO.WarehouseItemList;
 import com.shop.ShopApplication.service.warehouseService.responses.ItemResponse;
 
 import java.util.List;

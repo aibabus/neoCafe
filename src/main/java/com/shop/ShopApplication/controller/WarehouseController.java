@@ -1,7 +1,7 @@
 package com.shop.ShopApplication.controller;
 
-import com.shop.ShopApplication.DTO.warehouseDTO.SaveWarehouseItemDto;
-import com.shop.ShopApplication.DTO.warehouseDTO.WarehouseItemList;
+import com.shop.ShopApplication.dto.warehouseDTO.SaveWarehouseItemDto;
+import com.shop.ShopApplication.dto.warehouseDTO.WarehouseItemList;
 import com.shop.ShopApplication.service.warehouseService.WarehouseService;
 import com.shop.ShopApplication.service.warehouseService.responses.ItemResponse;
 import lombok.RequiredArgsConstructor;
