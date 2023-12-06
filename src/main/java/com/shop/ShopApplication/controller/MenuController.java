@@ -91,30 +91,5 @@ public class MenuController {
     }
 
 
-    @GetMapping("/client/getSingleMenuProduct")
-    public ResponseEntity<MenuResponse> getSingleMenuProductClient(@RequestParam Long product_id){
-        return ResponseEntity.ok(menuService.getMenuProductById(product_id));
-    }
-    @GetMapping("/client/allCategory")
-    public ResponseEntity<List<Categories>> allCategoryClient(){
-        return ResponseEntity.ok(menuService.getAllCategories());
-    }
-    @GetMapping("/client/allMenuByCategory")
-    public ResponseEntity<List<MenuProductDto>> getAllMenuProductsByCategoryClient(@RequestParam Long category_id) {
-        List<MenuProductDto> menuProducts = menuService.getMenuProducts(category_id);
-        return ResponseEntity.ok(menuProducts);
-    }
-    @GetMapping("/client/allMenuProducts")
-    public ResponseEntity<List<MenuProductDto>> getAllMenuProductsClient() {
-        List<MenuProductDto> menuProducts = menuService.getAllMenuProducts();
-        return ResponseEntity.ok(menuProducts);
-    }
-
-    @GetMapping("/client/allFilialMenuByCategory")
-    public ResponseEntity<List<MenuProductDto>> getAllFilialMenuProductsByCategoryClient(@RequestParam Long category_id,
-                                                                                         @RequestParam Long filial_id) {
-        List<MenuProductDto> menuProducts = menuService.getMenuProductsByCategoryAndFilial(category_id, filial_id);
-        return ResponseEntity.ok(menuProducts);
-    }
 
 }

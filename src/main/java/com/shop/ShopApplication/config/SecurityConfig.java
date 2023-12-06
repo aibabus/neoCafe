@@ -28,8 +28,6 @@ public class SecurityConfig {
                         authorizeRequests
                                 .antMatchers("/api/client/**")
                                 .hasAuthority("CLIENT")
-                                .antMatchers("/api/menu/client/**")
-                                .hasAuthority("CLIENT")
                                 .antMatchers("/api/menu/admin/**")
                                 .hasAuthority("ADMIN")
 //                                .antMatchers("/api/admin/**")
