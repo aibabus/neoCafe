@@ -46,7 +46,7 @@ public class SmsService {
 
         if (userOptional.isEmpty()) {
             return SendCodeResponse.builder()
-                    .message("User not found for phone number: " + phoneNumber)
+                    .message("Пользоватеь с таким номером телефона не найден: " + phoneNumber)
                     .build();
         }
 

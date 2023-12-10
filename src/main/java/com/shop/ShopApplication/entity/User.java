@@ -59,7 +59,11 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        if (login != null) {
+            return login; // For users with a login (admin users)
+        } else {
+            return phoneNumber; // For users with only a phone number
+        }
     }
 
     @Override

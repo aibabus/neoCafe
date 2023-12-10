@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.service.auth;
 
+import com.shop.ShopApplication.entity.User;
 import com.shop.ShopApplication.jwt.JwtService;
 
 import com.shop.ShopApplication.entity.VerificationCode;
@@ -8,9 +9,11 @@ import com.shop.ShopApplication.service.adminService.AdminService;
 import com.shop.ShopApplication.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -49,11 +52,13 @@ public class AuthService {
         verificationCodeRepository.delete(verificationCode);
 
         var user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+
+        // Generate a token for the client
+        String token = jwtService.generateToken(user);
         return VerificationResponse.builder()
                 .message("Успешно !")
                 .isSucceed(true)
-                .token(jwtToken)
+                .token(token)
                 .user(user)
                 .build();
     }

@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.config;
 
+import com.shop.ShopApplication.entity.User;
 import com.shop.ShopApplication.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +20,20 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> userRepository.findByLogin(username)
-                .orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        return login -> {
+            boolean isPhoneNumber = login.matches("^\\+\\d{12}$");
+
+            User user;
+            if (isPhoneNumber) {
+                user = userRepository.findByPhoneNumber(login)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found with phone number: " + login));
+            } else {
+                user = userRepository.findByLogin(login)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + login));
+            }
+
+            return user;
+        };
     }
     @Bean
     public AuthenticationProvider authenticationProvider(){

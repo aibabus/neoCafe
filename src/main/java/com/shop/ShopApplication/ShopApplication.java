@@ -1,5 +1,8 @@
 package com.shop.ShopApplication;
 
+import com.shop.ShopApplication.entity.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -16,5 +19,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ShopApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ShopApplication.class, args);
+
 	}
 }
