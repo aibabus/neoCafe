@@ -1,6 +1,7 @@
 package com.shop.ShopApplication.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.shop.ShopApplication.entity.enums.Role;
@@ -27,6 +28,7 @@ public class User implements UserDetails {
     private Long user_id;
     private String firstName;
     private String lastName;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
     @Column(unique = true)
     private String phoneNumber;

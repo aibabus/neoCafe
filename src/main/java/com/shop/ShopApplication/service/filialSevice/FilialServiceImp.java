@@ -3,6 +3,7 @@ package com.shop.ShopApplication.service.filialSevice;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.shop.ShopApplication.dto.filialDTO.FilialListDto;
+import com.shop.ShopApplication.dto.filialDTO.FilialPageListDto;
 import com.shop.ShopApplication.dto.filialDTO.SaveFilialDto;
 import com.shop.ShopApplication.dto.filialDTO.SingleFilialDto;
 import com.shop.ShopApplication.entity.Filial;
@@ -153,6 +154,7 @@ public class FilialServiceImp implements FilialService{
     @Override
     public List<FilialListDto> allFilial(){
         List<Filial> filials = filialRepository.findAll();
+
         return filials.stream()
                 .map(filial -> new FilialListDto(
                         filial.getFilial_id(),
@@ -161,6 +163,8 @@ public class FilialServiceImp implements FilialService{
                         filial.isOpen()
                 )).collect(Collectors.toList());
     }
+
+
 
     @Override
     public SingleFilialDto getFilialDetails(Long filialId) {

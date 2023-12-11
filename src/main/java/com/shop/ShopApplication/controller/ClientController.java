@@ -2,11 +2,13 @@ package com.shop.ShopApplication.controller;
 
 import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
 import com.shop.ShopApplication.dto.filialDTO.FilialListDto;
+import com.shop.ShopApplication.dto.filialDTO.FilialStatusDto;
 import com.shop.ShopApplication.entity.Categories;
 import com.shop.ShopApplication.service.auth.AuthService;
 import com.shop.ShopApplication.service.clientService.ClientService;
 import com.shop.ShopApplication.service.clientService.responses.ClientResponse;
 import com.shop.ShopApplication.service.filialSevice.FilialService;
+import com.shop.ShopApplication.service.filialSevice.FilialStatusService;
 import com.shop.ShopApplication.service.menuService.MenuService;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
 import com.shop.ShopApplication.service.smsServices.smsSender.SmsService;
@@ -25,6 +27,7 @@ public class ClientController {
     private final ClientService clientService;
     private final MenuService menuService;
     private final FilialService filialService;
+    private final FilialStatusService filialStatusService;
 
 
 
@@ -68,4 +71,9 @@ public class ClientController {
         return ResponseEntity.ok(filialService.allFilial());
     }
 
+    @GetMapping("/filial/filialStatusList")
+    public ResponseEntity<List<FilialStatusDto>> filialsStatus(){
+        return ResponseEntity.ok(filialStatusService.getFilialStatusForAllFiliales());
+    }
 }
+
