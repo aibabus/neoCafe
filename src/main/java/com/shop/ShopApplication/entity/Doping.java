@@ -21,6 +21,7 @@ public class Doping {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long doping_id;
+
     private Double quantity;
     private Unit unit;
     private Double price;
@@ -37,5 +38,4 @@ public class Doping {
             inverseJoinColumns = @JoinColumn(name = "item_id")
     )
     private List<WarehouseItem> items;
-
 }

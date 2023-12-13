@@ -1,5 +1,7 @@
 package com.shop.ShopApplication.service.smsServices.smsSender;
 
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,7 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class TwilioConfig {
     private String accountSid;
     private String authToken;
-    private String serviceSid;
+    @Value("${twilio.phone-number}")
+    private String phoneNumber;
 
     public TwilioConfig(){
 
@@ -30,11 +33,11 @@ public class TwilioConfig {
         this.authToken = authToken;
     }
 
-    public String getServiceSid() {
-        return serviceSid;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setServiceSid(String serviceSid) {
-        this.serviceSid = serviceSid;
+    public void getPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

@@ -1,9 +1,9 @@
 package com.shop.ShopApplication.controller;
 
 import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
+import com.shop.ShopApplication.dto.MenuDTO.MenuCompositionRequest;
 import com.shop.ShopApplication.dto.MenuDTO.MenuRequest;
 import com.shop.ShopApplication.entity.Categories;
-import com.shop.ShopApplication.entity.MenuProduct;
 import com.shop.ShopApplication.service.menuService.MenuService;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
 import lombok.RequiredArgsConstructor;
@@ -44,9 +44,10 @@ public class MenuController {
 
 
     @PostMapping("/admin/saveProduct")
-    public ResponseEntity<MenuResponse> saveMenuProduct(@RequestBody MenuRequest menuRequest) throws IOException {
-        return ResponseEntity.ok(menuService.saveMenuItemWithComposition(menuRequest));
+    public ResponseEntity<MenuResponse> saveMenuProductWithComposition(@RequestBody MenuCompositionRequest menuRequest) throws IOException {
+        return ResponseEntity.ok(menuService.saveMenuItem(menuRequest));
     }
+
     @PostMapping("/admin/saveProductImage")
     public ResponseEntity<MenuResponse> saveMenuProductImage(@RequestParam Long product_id,
                                                              @RequestParam MultipartFile image) throws IOException {
@@ -55,7 +56,7 @@ public class MenuController {
     }
     @PutMapping("/admin/update/menuProduct")
     public ResponseEntity<MenuResponse> updateMenuProduct(@RequestParam Long product_id,
-                                                             @RequestBody MenuRequest menuRequest) throws IOException {
+                                                             @RequestBody MenuCompositionRequest menuRequest) throws IOException {
         return ResponseEntity.ok(menuService.updateMenuItemWithComposition(product_id, menuRequest));
 
     }

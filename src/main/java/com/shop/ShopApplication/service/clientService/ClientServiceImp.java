@@ -38,7 +38,7 @@ public class ClientServiceImp implements ClientService{
                 .phoneNumber(request.getPhoneNumber())
                 .birthDate(request.getBirthDate())
                 .role(Role.CLIENT)
-                .enabled(true)
+                .enabled(false)
                 .build();
         if (user == null) {
             return ClientAuthResponse.builder()

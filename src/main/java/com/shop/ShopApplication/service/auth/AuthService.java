@@ -48,17 +48,14 @@ public class AuthService {
 
         }
 
-        verificationCode.setPhoneConfirmedAt(now);
         verificationCodeRepository.delete(verificationCode);
-
         var user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
-
-        // Generate a token for the client
-        String token = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user);
+        user.setEnabled(true);
         return VerificationResponse.builder()
                 .message("Успешно !")
                 .isSucceed(true)
-                .token(token)
+                .token(jwtToken)
                 .user(user)
                 .build();
     }

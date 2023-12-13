@@ -112,11 +112,12 @@ public class MenuServiceImp implements MenuService{
         }
     }
 
-    @Override
-    public MenuResponse saveMenuItemWithComposition(MenuRequest menuRequest) throws IOException {
 
+
+    @Override
+    public MenuResponse saveMenuItem(MenuCompositionRequest menuRequest) throws IOException {
         Optional<Categories> optionalCategories = categoriesRepository.findById(menuRequest.getCategoryId());
-        if(optionalCategories.isEmpty()){
+        if (optionalCategories.isEmpty()) {
             return MenuResponse.builder()
                     .message("Такой категории не существует !")
                     .isSucceed(false)
@@ -125,7 +126,7 @@ public class MenuServiceImp implements MenuService{
         Categories category = optionalCategories.get();
 
         Optional<Filial> optionalFilial = filialRepository.findById(menuRequest.getFilialId());
-        if(optionalFilial.isEmpty()){
+        if (optionalFilial.isEmpty()) {
             return MenuResponse.builder()
                     .message("Такого филиала не существует!")
                     .isSucceed(false)
@@ -141,8 +142,8 @@ public class MenuServiceImp implements MenuService{
                 .filial(filial)
                 .build();
 
-        List<Composition> compositions = new ArrayList<>();
         if (menuRequest.getComposition() != null && !menuRequest.getComposition().isEmpty()) {
+            List<Composition> compositions = new ArrayList<>();
             for (CompositionRequest compositionRequest : menuRequest.getComposition()) {
                 Optional<WarehouseItem> optionalItem = warehouseRepository.findById(compositionRequest.getItemId());
                 if (optionalItem.isEmpty()) {
@@ -159,20 +160,19 @@ public class MenuServiceImp implements MenuService{
                         .build();
                 compositions.add(composition);
             }
+            product.setCompositions(compositions);
         }
 
-        List<Doping> dopings = new ArrayList<>();
         if (menuRequest.getDopings() != null && !menuRequest.getDopings().isEmpty()) {
+            List<Doping> dopings = new ArrayList<>();
             for (DopingRequest dopingRequest : menuRequest.getDopings()) {
                 Optional<WarehouseItem> optionalItem = warehouseRepository.findById(dopingRequest.getItemId());
-
                 if (optionalItem.isEmpty()) {
                     return MenuResponse.builder()
-                            .message("Такого продукта на складе нет !")
+                            .message("Такого продукта на складе нет!")
                             .isSucceed(false)
                             .build();
                 }
-
                 Doping doping = Doping.builder()
                         .quantity(dopingRequest.getQuantity())
                         .unit(dopingRequest.getUnit())
@@ -182,14 +182,13 @@ public class MenuServiceImp implements MenuService{
                         .build();
                 dopings.add(doping);
             }
+            product.setDopings(dopings);
         }
 
-        product.setCompositions(compositions);
-        product.setDopings(dopings);
         menuRepository.save(product);
 
         return MenuResponse.builder()
-                .message("Новый продукт с композицией был успешно добавлен в меню !")
+                .message("Новый продукт был успешно добавлен в меню!")
                 .isSucceed(true)
                 .menuProduct(product)
                 .build();
@@ -229,7 +228,7 @@ public class MenuServiceImp implements MenuService{
     }
 
     @Override
-    public MenuResponse updateMenuItemWithComposition(Long productId, MenuRequest menuRequest) throws IOException {
+    public MenuResponse updateMenuItemWithComposition(Long productId, MenuCompositionRequest menuRequest) throws IOException {
         Optional<MenuProduct> optionalProduct = menuRepository.findById(productId);
 
         if (optionalProduct.isEmpty()) {

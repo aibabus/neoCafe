@@ -191,7 +191,7 @@ public class SmsService {
                     .isSucceed(true)
                     .build();
         } catch (Exception e) {
-
+            System.out.println(e);
             return SendCodeResponse.builder()
                     .message("Данный номер телефона не действителен: " + phoneNumber)
                     .isSucceed(false)
