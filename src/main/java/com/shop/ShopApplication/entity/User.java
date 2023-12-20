@@ -35,6 +35,7 @@ public class User implements UserDetails {
     private String login;
     private String password;
     private Boolean enabled = true;
+    private double bonus;
     //ToDo: add working time
 
     @Enumerated(EnumType.STRING)

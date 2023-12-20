@@ -21,18 +21,18 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService(){
         return login -> {
-            boolean isPhoneNumber = login.matches("^\\+\\d{12}$");
 
-            User user;
-            if (isPhoneNumber) {
+            try{
+                User user;
                 user = userRepository.findByPhoneNumber(login)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found with phone number: " + login));
-            } else {
+                return user;
+            }catch (Exception e){
+                User user;
                 user = userRepository.findByLogin(login)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + login));
+                return user;
             }
-
-            return user;
         };
     }
     @Bean
@@ -52,6 +52,5 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.service.clientService;
 
+import com.shop.ShopApplication.dto.clientDTO.ClientProfileDto;
 import com.shop.ShopApplication.jwt.JwtService;
 import com.shop.ShopApplication.entity.enums.Role;
 import com.shop.ShopApplication.entity.User;
@@ -9,6 +10,7 @@ import com.shop.ShopApplication.repo.UserRepository;
 import com.shop.ShopApplication.repo.VerificationCodeRepository;
 import com.shop.ShopApplication.service.adminService.AdminService;
 import com.shop.ShopApplication.service.clientService.responses.ClientAuthResponse;
+import com.shop.ShopApplication.service.clientService.responses.ClientProfileResponse;
 import com.shop.ShopApplication.service.clientService.responses.ClientResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -112,6 +114,30 @@ public class ClientServiceImp implements ClientService{
         User user = optionalUser.get();
         userRepository.delete(user);
         return "Юзер удален";
+        }
+
+        @Override
+        public ClientProfileResponse clientProfile(Long user_id){
+            Optional<User> optionalUser = userRepository.findById(user_id);
+            if(optionalUser.isEmpty()){
+                return ClientProfileResponse.builder()
+                        .message("Пользователь не найден")
+                        .isSucceed(false)
+                        .clientProfileDto(null)
+                        .build();
+            }
+            User user = optionalUser.get();
+            ClientProfileDto userDto = ClientProfileDto.builder()
+                    .birthDate(user.getBirthDate())
+                    .phoneNumber(user.getPhoneNumber())
+                    .firstName(user.getFirstName())
+                    .build();
+
+            return ClientProfileResponse.builder()
+                    .isSucceed(true)
+                    .clientProfileDto(userDto)
+                    .build();
+
         }
 
 }
