@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shop.ShopApplication.entity.enums.OrderStatus;
 import com.shop.ShopApplication.entity.enums.Role;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,8 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    private boolean isReady;
+
     @ManyToOne
     @JoinColumn(name = "user_id") // Assuming an Order is linked to a User
     private User user;
@@ -36,5 +39,11 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
+
+    @ManyToOne
+    @JoinColumn(name = "filial_id")
+    @JsonBackReference
+    private Filial filial;
+
 
 }

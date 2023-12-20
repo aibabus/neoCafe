@@ -3,12 +3,11 @@ package com.shop.ShopApplication.controller;
 import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
 import com.shop.ShopApplication.dto.filialDTO.FilialListDto;
 import com.shop.ShopApplication.dto.filialDTO.FilialStatusDto;
-import com.shop.ShopApplication.dto.orderDTO.OrderItemDto;
+import com.shop.ShopApplication.dto.orderDTO.OrderInfoDto;
 import com.shop.ShopApplication.entity.Categories;
 import com.shop.ShopApplication.entity.Order;
-import com.shop.ShopApplication.entity.User;
-import com.shop.ShopApplication.orderService.OrderSevice;
-import com.shop.ShopApplication.orderService.requests.CreateOrderRequest;
+import com.shop.ShopApplication.service.orderService.OrderSevice;
+import com.shop.ShopApplication.service.orderService.requests.CreateOrderRequest;
 import com.shop.ShopApplication.repo.UserRepository;
 import com.shop.ShopApplication.service.auth.AuthService;
 import com.shop.ShopApplication.service.clientService.ClientService;
@@ -18,11 +17,10 @@ import com.shop.ShopApplication.service.filialSevice.FilialService;
 import com.shop.ShopApplication.service.filialSevice.FilialStatusService;
 import com.shop.ShopApplication.service.menuService.MenuService;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
+import com.shop.ShopApplication.service.orderService.response.OrderResponse;
 import com.shop.ShopApplication.service.smsServices.smsSender.SmsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -91,8 +89,12 @@ public class ClientController {
     }
 
     @PostMapping("/order/createOrder")
-    public ResponseEntity<Order> order(@RequestBody CreateOrderRequest request){
-        return ResponseEntity.ok(orderSevice.createOrder(request.getUserId(), request.getOrderItems()));
+    public ResponseEntity<OrderResponse> order(@RequestBody CreateOrderRequest request){
+        return ResponseEntity.ok(orderSevice.createOrder(request.getUserId(), request.getFilial_id(), request.getMinusBonus(), request.getOrderItems()));
+    }
+    @GetMapping("/order/userOrders")
+    public ResponseEntity<List<OrderInfoDto>> orderList(@RequestParam Long user_id){
+        return ResponseEntity.ok(orderSevice.getAllUserOrders(user_id));
     }
 }
 

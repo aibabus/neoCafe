@@ -34,4 +34,7 @@ public class Filial {
     @OneToMany(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MenuProduct> menuProducts;
 
+    @OneToMany(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> orders;
+
 }

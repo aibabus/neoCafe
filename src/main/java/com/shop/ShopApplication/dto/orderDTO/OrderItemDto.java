@@ -12,5 +12,6 @@ import java.util.List;
 @Builder
 public class OrderItemDto {
     private Long menuProductId;
+    private int quantity;
     private List<Long> dopingIds;
 }
