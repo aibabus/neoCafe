@@ -29,6 +29,7 @@ public class Order {
     private OrderStatus orderStatus;
 
     private boolean isReady;
+    private double minusBonus;
 
     @ManyToOne
     @JoinColumn(name = "user_id") // Assuming an Order is linked to a User

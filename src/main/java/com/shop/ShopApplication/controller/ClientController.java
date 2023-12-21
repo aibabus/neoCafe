@@ -4,6 +4,7 @@ import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
 import com.shop.ShopApplication.dto.filialDTO.FilialListDto;
 import com.shop.ShopApplication.dto.filialDTO.FilialStatusDto;
 import com.shop.ShopApplication.dto.orderDTO.OrderInfoDto;
+import com.shop.ShopApplication.dto.orderDTO.SingleOrderInfoDto;
 import com.shop.ShopApplication.entity.Categories;
 import com.shop.ShopApplication.entity.Order;
 import com.shop.ShopApplication.service.orderService.OrderSevice;
@@ -92,9 +93,20 @@ public class ClientController {
     public ResponseEntity<OrderResponse> order(@RequestBody CreateOrderRequest request){
         return ResponseEntity.ok(orderSevice.createOrder(request.getUserId(), request.getFilial_id(), request.getMinusBonus(), request.getOrderItems()));
     }
-    @GetMapping("/order/userOrders")
+    @GetMapping("/order/allUserOrders")
     public ResponseEntity<List<OrderInfoDto>> orderList(@RequestParam Long user_id){
         return ResponseEntity.ok(orderSevice.getAllUserOrders(user_id));
+    }
+
+
+    @PutMapping("/order/cancelOrder")
+    public ResponseEntity<OrderResponse> cancelOrder(@RequestParam Long order_id){
+        return ResponseEntity.ok(orderSevice.cancelOrder(order_id));
+    }
+
+    @GetMapping("/order/singleOrderInfo")
+    public ResponseEntity<SingleOrderInfoDto> singleOrder(@RequestParam Long order_id){
+        return ResponseEntity.ok(orderSevice.getOrderInfo(order_id));
     }
 }
 

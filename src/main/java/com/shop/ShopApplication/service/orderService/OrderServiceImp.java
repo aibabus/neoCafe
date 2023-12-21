@@ -1,7 +1,9 @@
 package com.shop.ShopApplication.service.orderService;
 
+import com.shop.ShopApplication.dto.orderDTO.OrderDetailDto;
 import com.shop.ShopApplication.dto.orderDTO.OrderInfoDto;
 import com.shop.ShopApplication.dto.orderDTO.OrderItemDto;
+import com.shop.ShopApplication.dto.orderDTO.SingleOrderInfoDto;
 import com.shop.ShopApplication.entity.*;
 import com.shop.ShopApplication.entity.enums.OrderStatus;
 import com.shop.ShopApplication.repo.*;
@@ -50,6 +52,7 @@ public class OrderServiceImp implements OrderSevice {
         order.setUser(user);
         order.setFilial(filial);
         order.setOrderDate(new Date());
+        order.setMinusBonus(minusBonus);
 
         List<OrderDetail> orderDetails = new ArrayList<>();
         double totalPrice = 0.0;
@@ -126,6 +129,61 @@ public class OrderServiceImp implements OrderSevice {
         orderInfoDto.setReady(order.isReady());
 
         return orderInfoDto;
+    }
+    @Override
+    public OrderResponse cancelOrder(Long order_id){
+        Optional<Order> optionalOrder = orderRepository.findById(order_id);
+        if (optionalOrder.isEmpty()){
+            return OrderResponse.builder()
+                    .message("Заказ не найден")
+                    .isSucceed(false)
+                    .build();
+        }
+        Order order = optionalOrder.get();
+        order.setOrderStatus(OrderStatus.CANCELED);
+        return OrderResponse.builder()
+                .message("Заказ отменен !")
+                .isSucceed(true)
+                .build();
+    }
+
+    @Override
+    public SingleOrderInfoDto getOrderInfo(Long order_id) {
+        Order order = orderRepository.findById(order_id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // Check if the order belongs to the user (optional)
+        // You may add logic here to verify that the order belongs to the currently logged-in user, if required.
+
+        // Map the order and its details to DTOs
+        SingleOrderInfoDto singleOrderInfoDto = SingleOrderInfoDto.builder()
+                .order_id(order.getOrderId())
+                .filialName(order.getFilial().getName())
+                .orderDate(order.getOrderDate())
+                .menuProducts(mapOrderDetailsToDto(order.getOrderDetails()))
+                .minusBonus(order.getMinusBonus())
+                .totalPrice(order.getPrice())
+                .build();
+
+        return singleOrderInfoDto;
+    }
+
+    private List<OrderDetailDto> mapOrderDetailsToDto(List<OrderDetail> orderDetails) {
+        return orderDetails.stream().map(detail -> {
+
+            MenuProduct product = detail.getMenuProduct();
+            Categories category = product.getCategories();
+            double totalPrice = detail.getPrice() * detail.getQuantity();
+
+            return OrderDetailDto.builder()
+                    .menuProductName(product.getName())
+                    .menuProductPrice(product.getPrice())
+                    .menuProductCategoryName(category.getName())
+                    .quantity(detail.getQuantity())
+                    .finalPrice(totalPrice)
+                    .image(product.getImage()) // Assuming you have a method to get the product image URL
+                    .build();
+        }).collect(Collectors.toList());
     }
 
 }
