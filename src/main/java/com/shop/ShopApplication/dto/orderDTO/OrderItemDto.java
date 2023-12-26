@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 @Data
 @AllArgsConstructor
@@ -13,5 +14,5 @@ import java.util.List;
 public class OrderItemDto {
     private Long menuProductId;
     private int quantity;
-    private List<Long> dopingIds;
+    private List<Long> dopingIds = new ArrayList<>();;
 }

@@ -91,6 +91,35 @@ public class ClientServiceImp implements ClientService{
                     .user(user)
                     .build();
         }
+
+    public ClientResponse confirmPhoneNumberUpdate(String currentPhoneNumber, String newPhoneNumber, String verificationCode) {
+        ClientAuthResponse authResponse = login(newPhoneNumber, verificationCode);
+
+        if (!authResponse.isSucceed()) {
+            return ClientResponse.builder()
+                    .message(authResponse.getMessage())
+                    .isSucceed(false)
+                    .build();
+        }
+
+        Optional<User> userOptional = userRepository.findByPhoneNumber(currentPhoneNumber);
+        if (userOptional.isEmpty()) {
+            return ClientResponse.builder()
+                    .message("User not found with phone number: " + currentPhoneNumber)
+                    .isSucceed(false)
+                    .build();
+        }
+
+        User user = userOptional.get();
+        user.setPhoneNumber(newPhoneNumber);
+        userRepository.save(user);
+
+        return ClientResponse.builder()
+                .message("Phone number updated successfully")
+                .isSucceed(true)
+                .build();
+    }
+
         @Override
         public ClientResponse deleteUser(Long user_id){
         Optional<User> optionalUser = userRepository.findById(user_id);
@@ -139,6 +168,47 @@ public class ClientServiceImp implements ClientService{
                     .build();
 
         }
+
+//    public ClientResponse updateUser(ClientProfileDto updatedProfile) {
+//        Optional<User> userOptional = userRepository.findByPhoneNumber(currentPhoneNumber);
+//
+//        if (userOptional.isEmpty()) {
+//            return UserResponse.builder()
+//                    .message("User not found with phone number: " + currentPhoneNumber)
+//                    .isSucceed(false)
+//                    .build();
+//        }
+//
+//        User user = userOptional.get();
+//
+//        // Updating user details
+//        if (updatedProfile.getFirstName() != null) {
+//            user.setFirstName(updatedProfile.getFirstName());
+//        }
+//        if (updatedProfile.getBirthDate() != null) {
+//            user.setBirthDate(updatedProfile.getBirthDate());
+//        }
+//
+//        // Handling phone number update with verification
+//        if (updatedProfile.getPhoneNumber() != null && !updatedProfile.getPhoneNumber().equals(currentPhoneNumber)) {
+//            // Initiate phone number verification process
+//            SendCodeResponse sendCodeResponse = verificationService.sendVerificationCodeLogin(updatedProfile.getPhoneNumber());
+//            if (!sendCodeResponse.isSucceed()) {
+//                return UserResponse.builder()
+//                        .message("Phone number verification failed: " + sendCodeResponse.getMessage())
+//                        .isSucceed(false)
+//                        .build();
+//            }
+//            // If verification is successful, update the phone number
+//            user.setPhoneNumber(updatedProfile.getPhoneNumber());
+//        }
+//
+//        userRepository.save(user);
+//        return UserResponse.builder()
+//                .message("User profile updated successfully")
+//                .isSucceed(true)
+//                .build();
+//    }
 
 }
 

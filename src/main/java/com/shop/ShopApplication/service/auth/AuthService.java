@@ -74,6 +74,7 @@ public class AuthService {
             verificationCodeRepository.delete(verificationCode);
             return AuthResponse.builder()
                     .message("Введеный вами код устарел")
+                    .isSucceed(false)
                     .build();
 
         }
@@ -83,6 +84,7 @@ public class AuthService {
         var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(jwtToken)
+                .isSucceed(true)
                 .build();
     }
 }

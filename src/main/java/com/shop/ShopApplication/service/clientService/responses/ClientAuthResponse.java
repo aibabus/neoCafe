@@ -15,4 +15,8 @@ public class ClientAuthResponse {
     private String token;
     private Boolean isSucceed;
     private User user;
+
+    public boolean isSucceed() {
+        return isSucceed;
+    }
 }

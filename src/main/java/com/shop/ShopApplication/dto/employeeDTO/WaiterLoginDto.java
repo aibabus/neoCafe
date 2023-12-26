@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BaristaLoginDto {
+public class WaiterLoginDto {
     private String login;
     private String password;
 }

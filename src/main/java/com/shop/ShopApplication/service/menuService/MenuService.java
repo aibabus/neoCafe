@@ -1,9 +1,11 @@
 package com.shop.ShopApplication.service.menuService;
 
+import com.shop.ShopApplication.dto.MenuDTO.MenuListDto;
 import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
 import com.shop.ShopApplication.dto.MenuDTO.MenuCompositionRequest;
 import com.shop.ShopApplication.dto.MenuDTO.MenuRequest;
 import com.shop.ShopApplication.entity.Categories;
+import com.shop.ShopApplication.entity.MenuProduct;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,5 +27,7 @@ public interface MenuService {
             Long categoryId,
             Long filialId
     );
+    public List<MenuListDto> getAddtionalMenuProducts();
+    public List<MenuListDto> searchMenuProductsByName(String name);
     public MenuResponse saveMenuItem(MenuCompositionRequest menuRequest) throws IOException;
 }

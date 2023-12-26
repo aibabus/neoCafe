@@ -7,6 +7,8 @@ import com.shop.ShopApplication.entity.*;
 import com.shop.ShopApplication.repo.*;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +18,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 @Service
 @AllArgsConstructor
@@ -350,11 +354,13 @@ public class MenuServiceImp implements MenuService{
 
     @Override
     public List<MenuProductDto> getAllMenuProducts() {
-        List<MenuProduct> menuProducts = menuRepository.findAll();
+        Pageable firstTen = PageRequest.of(0, 10); // First page, 10 items
+        Page<MenuProduct> menuProducts = menuRepository.findAll(firstTen);
         return menuProducts.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public List<MenuProductDto> getMenuProductsByCategoryAndFilial(
@@ -436,6 +442,33 @@ public class MenuServiceImp implements MenuService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<MenuListDto> searchMenuProductsByName(String name) {
+        List<MenuProduct> products = menuRepository.findByNameContainingIgnoreCase(name);
+        return products.stream()
+                .map(this::convertToMenuListDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MenuListDto> getAddtionalMenuProducts() {
+        Pageable limit = PageRequest.of(0, 5);
+        List<MenuProduct> randomProducts = menuRepository.findRandomProducts(limit);
+        return randomProducts.stream()
+                .map(this::convertToMenuListDto)
+                .collect(Collectors.toList());
+    }
+
+    private MenuListDto convertToMenuListDto(MenuProduct product) {
+        return MenuListDto.builder()
+                .productId(product.getProduct_id())
+                .name(product.getName())
+                .categoryName(product.getCategories() != null ? product.getCategories().getName() : null)
+                .price(product.getPrice())
+                .image(product.getImage())
+                .filial_id(product.getFilial() != null ? product.getFilial().getFilial_id() : null)
+                .build();
+    }
 
 
 

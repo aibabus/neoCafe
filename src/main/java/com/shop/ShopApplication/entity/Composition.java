@@ -1,7 +1,6 @@
 package com.shop.ShopApplication.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.shop.ShopApplication.entity.enums.Unit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

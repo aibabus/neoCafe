@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 public class SendSmsResponse {
     private String message;
     private Boolean isSucceed;
+    public boolean isSucceed() {
+        return isSucceed;
+    }
 }

@@ -2,7 +2,6 @@ package com.shop.ShopApplication.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.shop.ShopApplication.entity.enums.Role;
 import lombok.*;
@@ -63,10 +62,9 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         if (login != null) {
-            return login; // For users with a login (admin users)
-        } else {
-            return phoneNumber; // For users with only a phone number
+            return login;
         }
+            return phoneNumber;
     }
 
     @Override

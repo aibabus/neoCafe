@@ -32,7 +32,7 @@ public class OrderServiceImp implements OrderSevice {
         Optional<User> optUser = userRepository.findById(user_id);
         Optional<Filial> optFilial = filialRepository.findById(filialId);
 
-        if(optUser.isEmpty()){
+        if (optUser.isEmpty()) {
             return OrderResponse.builder()
                     .message("Клиент не найден")
                     .isSucceed(false)
@@ -71,43 +71,50 @@ public class OrderServiceImp implements OrderSevice {
             detail.setQuantity(item.getQuantity());
 
 
-            for (Long dopingId : item.getDopingIds()) {
-                Doping doping = dopingRepository.findById(dopingId)
-                        .orElseThrow(() -> new RuntimeException("Такого допинга для продукта не найдено !"));
-                totalPrice += doping.getPrice();
+            if (item.getDopingIds() != null && !item.getDopingIds().isEmpty()) {
+                List<Doping> dopings = item.getDopingIds().stream()
+                        .map(dopingId -> dopingRepository.findById(dopingId)
+                                .orElseThrow(() -> new RuntimeException("Такого допинга для продукта не найдено !")))
+                        .collect(Collectors.toList());
+                for (Doping doping : dopings) {
+                    totalPrice += doping.getPrice();
+                }
+                detail.setDopings(dopings);
             }
-
-
-            List<Doping> dopings = item.getDopingIds().stream()
-                    .map(dopingId -> dopingRepository.findById(dopingId)
-                            .orElseThrow(() -> new RuntimeException("Такого допинга для продукта не найдено !")))
-                    .collect(Collectors.toList());
-            detail.setDopings(dopings);
-
-            orderDetails.add(detail);
         }
 
+           totalPrice = applyMinusBonus(user, totalPrice, minusBonus);
+
+
+            order.setReady(false);
+            order.setOrderStatus(OrderStatus.NEW);
+            totalPrice = Math.max(totalPrice, 0.0);
+            order.setPrice(totalPrice);
+            order.setOrderDetails(orderDetails);
+            orderRepository.save(order);
+            userRepository.save(user);
+
+            return OrderResponse.builder()
+                    .message("Заказ успешно отправлен !")
+                    .isSucceed(true)
+                    .finalPrice(totalPrice)
+                    .order(order)
+                    .build();
+        }
+
+
+    private double applyMinusBonus(User user, double totalPrice, Double minusBonus) {
         if (minusBonus != null && minusBonus > 0) {
-            totalPrice -= minusBonus;
-            Double bonusLeft = user.getBonus() - minusBonus;
-            user.setBonus(bonusLeft);
+            if (user.getBonus() >= minusBonus) {
+                totalPrice -= minusBonus;
+                user.setBonus(user.getBonus() - minusBonus);
+            } else {
+                // User doesn't have enough bonus - apply only the available bonus
+                totalPrice -= user.getBonus(); // Reduce total price by the amount of available bonus
+                user.setBonus(0.0); // All available bonuses are used
+            }
         }
-
-
-        order.setReady(false);
-        order.setOrderStatus(OrderStatus.NEW);
-        totalPrice = Math.max(totalPrice, 0.0);
-        order.setPrice(totalPrice);
-        order.setOrderDetails(orderDetails);
-        orderRepository.save(order);
-        userRepository.save(user);
-
-        return OrderResponse.builder()
-                .message("Заказ успешно отправлен !")
-                .isSucceed(true)
-                .finalPrice(totalPrice)
-                .order(order)
-                .build();
+        return Math.max(totalPrice, 0.0);
     }
 
     @Override
@@ -133,18 +140,56 @@ public class OrderServiceImp implements OrderSevice {
     @Override
     public OrderResponse cancelOrder(Long order_id){
         Optional<Order> optionalOrder = orderRepository.findById(order_id);
+
         if (optionalOrder.isEmpty()){
             return OrderResponse.builder()
                     .message("Заказ не найден")
                     .isSucceed(false)
                     .build();
         }
+
         Order order = optionalOrder.get();
-        order.setOrderStatus(OrderStatus.CANCELED);
-        return OrderResponse.builder()
-                .message("Заказ отменен !")
-                .isSucceed(true)
-                .build();
+
+        switch (order.getOrderStatus()) {
+            case NEW -> {
+                order.setOrderStatus(OrderStatus.CANCELED);
+                orderRepository.save(order);
+                return OrderResponse.builder()
+                        .message("Заказ отменен !")
+                        .isSucceed(true)
+                        .build();
+            }
+            case INPROGRESS -> {
+                return OrderResponse.builder()
+                        .message("Заказ уже в процессе, его нельзя отменить!")
+                        .isSucceed(true)
+                        .build();
+            }
+            case DONE -> {
+                return OrderResponse.builder()
+                        .message("Заказ уже выполнен, его нельзя отменить!")
+                        .isSucceed(true)
+                        .build();
+            }
+            case CLOSED -> {
+                return OrderResponse.builder()
+                        .message("Заказ уже закрыт, его нельзя отменить!")
+                        .isSucceed(true)
+                        .build();
+            }
+            case CANCELED -> {
+                return OrderResponse.builder()
+                        .message("Заказ уже был ранее отменен!")
+                        .isSucceed(true)
+                        .build();
+            }
+            default -> {
+                return OrderResponse.builder()
+                        .message("Неизвестный статус заказа, отмена невозможна!")
+                        .isSucceed(false)
+                        .build();
+            }
+        }
     }
 
     @Override
@@ -181,7 +226,7 @@ public class OrderServiceImp implements OrderSevice {
                     .menuProductCategoryName(category.getName())
                     .quantity(detail.getQuantity())
                     .finalPrice(totalPrice)
-                    .image(product.getImage()) // Assuming you have a method to get the product image URL
+                    .image(product.getImage())
                     .build();
         }).collect(Collectors.toList());
     }

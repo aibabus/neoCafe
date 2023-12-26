@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.controller;
 
+import com.shop.ShopApplication.dto.MenuDTO.MenuListDto;
 import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
 import com.shop.ShopApplication.dto.MenuDTO.MenuCompositionRequest;
 import com.shop.ShopApplication.dto.MenuDTO.MenuRequest;
@@ -91,6 +92,14 @@ public class MenuController {
         return ResponseEntity.ok(menuProducts);
     }
 
-
-
+    @GetMapping("/admin/search")
+    public ResponseEntity<List<MenuListDto>> searchMenuProducts(@RequestParam String name) {
+        List<MenuListDto> dtos = menuService.searchMenuProductsByName(name);
+        if (dtos.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dtos);
+    }
 }
+
+

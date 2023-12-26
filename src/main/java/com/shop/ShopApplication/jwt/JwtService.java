@@ -104,6 +104,10 @@ public class JwtService {
                 .build().parseClaimsJws(token).getBody();
     }
 
+    public String getUsernameFromToken(String token) {
+        return extractUsername(token);
+    }
+
     private SecretKey getSignIngKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);

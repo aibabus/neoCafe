@@ -2,7 +2,6 @@ package com.shop.ShopApplication.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shop.ShopApplication.entity.enums.OrderStatus;
-import com.shop.ShopApplication.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,6 +44,8 @@ public class Order {
     @JoinColumn(name = "filial_id")
     @JsonBackReference
     private Filial filial;
+
+
 
 
 }

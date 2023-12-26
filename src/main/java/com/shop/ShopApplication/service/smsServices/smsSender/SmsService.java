@@ -1,6 +1,6 @@
 package com.shop.ShopApplication.service.smsServices.smsSender;
 
-import com.shop.ShopApplication.dto.employeeDTO.BaristaLoginDto;
+import com.shop.ShopApplication.dto.employeeDTO.WaiterLoginDto;
 import com.shop.ShopApplication.entity.enums.Role;
 import com.shop.ShopApplication.service.auth.SendCodeResponse;
 import com.shop.ShopApplication.repo.UserRepository;
@@ -75,8 +75,47 @@ public class SmsService {
         }
     }
 
-    
-    public SendCodeResponse sendVerificationCodeWaiter(String phoneNumber) {
+
+    public SendCodeResponse initiatePhoneNumberUpdate(String currentPhoneNumber, String newPhoneNumber) {
+        Optional<User> userOptional = userRepository.findByPhoneNumber(currentPhoneNumber);
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime expirationTime = currentTime.plusMinutes(5);
+
+        if (userOptional.isEmpty()) {
+            return SendCodeResponse.builder()
+                    .message("Клиент с таким номером телефона не найден: " + currentPhoneNumber)
+                    .isSucceed(false)
+                    .build();
+        }
+
+        User user = userOptional.get();
+        String verificationCode = generateVerificationCode();
+        VerificationCode Verificationcode = new VerificationCode();
+        Verificationcode.setCode(verificationCode);
+        Verificationcode.setPhoneNumber(newPhoneNumber);
+        Verificationcode.setUser(user);
+        Verificationcode.setExpirationTime(expirationTime);
+        verificationCodeRepository.save(Verificationcode);
+
+        String message = "Ваш код подтверждения: " + verificationCode;
+        SmsRequest smsRequest = new SmsRequest(newPhoneNumber, message);
+
+        try{
+            smsSender.sendSms(smsRequest);
+            return SendCodeResponse.builder()
+                    .message("Ваш код подтверждения был успешно отправлен на номер: " + newPhoneNumber)
+                    .isSucceed(true)
+                    .build();
+        }catch (Exception e){
+            return SendCodeResponse.builder()
+                    .message("Данный номер телефона не действителен: " + newPhoneNumber)
+                    .isSucceed(false)
+                    .build();
+        }
+    }
+
+
+    public SendCodeResponse sendVerificationCodeBarista(String phoneNumber) {
 
         Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
 
@@ -93,7 +132,7 @@ public class SmsService {
                     .isSucceed(false)
                     .build();
         }
-        if (user.getRole() != Role.WAITER){
+        if (user.getRole() != Role.BARISTA){
             return SendCodeResponse.builder()
                     .message("Данный пользователь не работает официантом " + phoneNumber)
                     .isSucceed(false)
@@ -129,7 +168,7 @@ public class SmsService {
 
     }
 
-    public SendCodeResponse sendVerificationCodeBarista(BaristaLoginDto request){
+    public SendCodeResponse sendVerificationCodeWaiter(WaiterLoginDto request){
                 authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getLogin(),
