@@ -9,12 +9,10 @@ import com.shop.ShopApplication.entity.enums.OrderStatus;
 import com.shop.ShopApplication.repo.*;
 import com.shop.ShopApplication.service.orderService.response.OrderResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +24,7 @@ public class OrderServiceImp implements OrderSevice {
     private final MenuRepository menuRepository;
     private final UserRepository userRepository;
     private final FilialRepository filialRepository;
+    private final TableRepository tableRepository;
 
     @Override
     public OrderResponse createOrder(Long user_id, Long filialId, Double minusBonus, List<OrderItemDto> orderItems) {
@@ -103,6 +102,81 @@ public class OrderServiceImp implements OrderSevice {
         }
 
 
+    @Override
+    public OrderResponse createOrderWaiter(String username, Long filialId, Long tableId, List<OrderItemDto> orderItems) {
+        Optional<User> userOptional = userRepository.findByLoginOrPhoneNumber(username, username);
+        if (userOptional.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with identifier: " + username);
+        }
+
+        Optional<Filial> optFilial = filialRepository.findById(filialId);
+        if (optFilial.isEmpty()) {
+            return OrderResponse.builder()
+                    .message("Филиал не найден")
+                    .isSucceed(false)
+                    .build();
+        }
+        RestaurantTable table = tableRepository.findById(tableId)
+                .orElseThrow(() -> new RuntimeException("Стол не найден!"));
+
+
+        User user = userOptional.get();
+        Filial filial = optFilial.get();
+
+        Order order = new Order();
+
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        double totalPrice = 0.0;
+
+        for (OrderItemDto item : orderItems) {
+            OrderDetail detail = new OrderDetail();
+            MenuProduct product = menuRepository.findById(item.getMenuProductId())
+                    .orElseThrow(() -> new RuntimeException("Такого продукта в меню не найдено !"));
+
+
+            double productTotalPrice = product.getPrice() * item.getQuantity();
+            totalPrice += productTotalPrice;
+            detail.setPrice(productTotalPrice);
+            detail.setMenuProduct(product);
+            detail.setOrder(order);
+            detail.setQuantity(item.getQuantity());
+
+
+            if (item.getDopingIds() != null && !item.getDopingIds().isEmpty()) {
+                List<Doping> dopings = item.getDopingIds().stream()
+                        .map(dopingId -> dopingRepository.findById(dopingId)
+                                .orElseThrow(() -> new RuntimeException("Такого допинга для продукта не найдено !")))
+                        .collect(Collectors.toList());
+                for (Doping doping : dopings) {
+                    totalPrice += doping.getPrice();
+                }
+                detail.setDopings(dopings);
+            }
+        }
+        order.setTable(table);
+        order.setUser(user);
+        order.setFilial(filial);
+        order.setOrderDate(new Date());
+        order.setReady(false);
+        order.setOrderStatus(OrderStatus.NEW);
+        totalPrice = Math.max(totalPrice, 0.0);
+        order.setPrice(totalPrice);
+        order.setOrderDetails(orderDetails);
+        orderRepository.save(order);
+
+        userRepository.save(user);
+
+        table.setAvailable(false);
+        tableRepository.save(table);
+
+        return OrderResponse.builder()
+                .message("Заказ успешно добавлен!")
+                .isSucceed(true)
+                .finalPrice(totalPrice)
+                .order(order)
+                .build();
+    }
+
     private double applyMinusBonus(User user, double totalPrice, Double minusBonus) {
         if (minusBonus != null && minusBonus > 0) {
             if (user.getBonus() >= minusBonus) {
@@ -121,7 +195,10 @@ public class OrderServiceImp implements OrderSevice {
     public List<OrderInfoDto> getAllUserOrders(Long userId) {
         List<Order> userOrders = orderRepository.findByUserId(userId);
 
-        return userOrders.stream().map(this::mapToOrderInfoDto).collect(Collectors.toList());
+        return userOrders.stream()
+                .sorted(Comparator.comparing(Order::getOrderDate).reversed())
+                .map(this::mapToOrderInfoDto)
+                .collect(Collectors.toList());
     }
 
     private OrderInfoDto mapToOrderInfoDto(Order order) {

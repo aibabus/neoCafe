@@ -1,9 +1,6 @@
 package com.shop.ShopApplication.controller;
 
-import com.shop.ShopApplication.dto.MenuDTO.MenuListDto;
-import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
-import com.shop.ShopApplication.dto.MenuDTO.MenuCompositionRequest;
-import com.shop.ShopApplication.dto.MenuDTO.MenuRequest;
+import com.shop.ShopApplication.dto.MenuDTO.*;
 import com.shop.ShopApplication.entity.Categories;
 import com.shop.ShopApplication.service.menuService.MenuService;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
@@ -34,7 +31,7 @@ public class MenuController {
     }
 
     @GetMapping("/admin/allCategory")
-    public ResponseEntity<List<Categories>> allCategory(){
+    public ResponseEntity<List<CategoryListDto>> allCategory(){
         return ResponseEntity.ok(menuService.getAllCategories());
     }
 

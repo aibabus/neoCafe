@@ -31,11 +31,14 @@ public class Order {
     private double minusBonus;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // Assuming an Order is linked to a User
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "order_date")
     private Date orderDate;
+
+    @Column(name = "order_end_date")
+    private Date orderEndDate;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
@@ -45,6 +48,9 @@ public class Order {
     @JsonBackReference
     private Filial filial;
 
+    @ManyToOne
+    @JoinColumn(name = "table_id")
+    private RestaurantTable table;
 
 
 

@@ -91,8 +91,19 @@ public class MenuServiceImp implements MenuService{
         }
     }
     @Override
-    public List<Categories> getAllCategories() {
-        return categoriesRepository.findAll();
+    public List<CategoryListDto> getAllCategories() {
+        List<Categories> categories = categoriesRepository.findAll();
+
+        return categories.stream()
+                .map(this::convertToCategoryListDto)
+                .collect(Collectors.toList());
+    }
+    private CategoryListDto convertToCategoryListDto(Categories category) {
+        return CategoryListDto.builder()
+                .categoryId(category.getCategory_id())
+                .categoryName(category.getName())
+                .image(category.getImage())
+                .build();
     }
 
     @Override

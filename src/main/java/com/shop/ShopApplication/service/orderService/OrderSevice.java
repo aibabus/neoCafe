@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface OrderSevice{
     public OrderResponse createOrder(Long user_id, Long filialId, Double minusBonus, List<OrderItemDto> orderItems);
+    public OrderResponse createOrderWaiter(String username, Long filialId, Long tableId, List<OrderItemDto> orderItems);
     public List<OrderInfoDto> getAllUserOrders(Long userId);
     public OrderResponse cancelOrder(Long order_id);
     public SingleOrderInfoDto getOrderInfo(Long order_id);

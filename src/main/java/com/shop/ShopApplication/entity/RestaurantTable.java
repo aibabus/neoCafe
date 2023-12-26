@@ -13,12 +13,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Tables {
+public class RestaurantTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long table_id;
-    private Long user_id;
-    private Long order_id;
     private boolean isAvailable =  true;
 
     @ManyToOne

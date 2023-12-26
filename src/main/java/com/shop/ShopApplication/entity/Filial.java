@@ -38,6 +38,6 @@ public class Filial {
     private List<Order> orders;
 
     @OneToMany(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Tables> tables;
+    private List<RestaurantTable> tables;
 
 }

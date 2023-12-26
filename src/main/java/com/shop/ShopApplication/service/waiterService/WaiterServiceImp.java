@@ -4,7 +4,7 @@ import com.shop.ShopApplication.dto.filialDTO.WorkingTimeDto;
 import com.shop.ShopApplication.dto.waiterDTO.WaiterProfileDto;
 import com.shop.ShopApplication.entity.User;
 import com.shop.ShopApplication.entity.WorkingTime;
-import com.shop.ShopApplication.repo.UserRepository;
+import com.shop.ShopApplication.repo.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,12 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class WaiterServiceImp implements WaiterService{
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
+    private final DopingRepository dopingRepository;
+    private final MenuRepository menuRepository;
     private final UserRepository userRepository;
+    private final FilialRepository filialRepository;
 
     @Override
     public WaiterProfileDto getUserProfile(String username) {
@@ -53,4 +58,6 @@ public class WaiterServiceImp implements WaiterService{
                 .filialName(filialName)
                 .build();
     }
+
+
 }

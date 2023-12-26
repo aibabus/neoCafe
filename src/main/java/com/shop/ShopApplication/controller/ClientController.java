@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.controller;
 
+import com.shop.ShopApplication.dto.MenuDTO.CategoryListDto;
 import com.shop.ShopApplication.dto.MenuDTO.MenuListDto;
 import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
 import com.shop.ShopApplication.dto.filialDTO.FilialListDto;
@@ -66,7 +67,7 @@ public class ClientController {
     }
     @Operation(summary = "Все категории")
     @GetMapping("/menu/allCategory")
-    public ResponseEntity<List<Categories>> allCategoryClient(){
+    public ResponseEntity<List<CategoryListDto>> allCategoryClient(){
         return ResponseEntity.ok(menuService.getAllCategories());
     }
     @Operation(summary = "Продукты из меню по категории без филиала")
@@ -140,5 +141,6 @@ public class ClientController {
     public ResponseEntity<SingleOrderInfoDto> singleOrder(@RequestParam Long order_id){
         return ResponseEntity.ok(orderSevice.getOrderInfo(order_id));
     }
+
 }
 

@@ -1,9 +1,6 @@
 package com.shop.ShopApplication.service.menuService;
 
-import com.shop.ShopApplication.dto.MenuDTO.MenuListDto;
-import com.shop.ShopApplication.dto.MenuDTO.MenuProductDto;
-import com.shop.ShopApplication.dto.MenuDTO.MenuCompositionRequest;
-import com.shop.ShopApplication.dto.MenuDTO.MenuRequest;
+import com.shop.ShopApplication.dto.MenuDTO.*;
 import com.shop.ShopApplication.entity.Categories;
 import com.shop.ShopApplication.entity.MenuProduct;
 import com.shop.ShopApplication.service.menuService.responses.MenuResponse;
@@ -15,7 +12,7 @@ import java.util.List;
 public interface MenuService {
     public MenuResponse saveCategory(String name, MultipartFile imageFile) throws IOException;
     public MenuResponse updateCategory(Long categoryId, String name, MultipartFile imageFile) throws IOException;
-    public List<Categories> getAllCategories();
+    public List<CategoryListDto> getAllCategories();
     public MenuResponse deleteCategory(Long categoryId);
     public MenuResponse addImageToMenuProduct(Long productId, MultipartFile imageFile) throws IOException;
     public MenuResponse updateMenuItemWithComposition(Long productId, MenuCompositionRequest menuRequest) throws IOException;
