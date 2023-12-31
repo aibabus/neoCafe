@@ -28,6 +28,8 @@ public class SecurityConfig {
                         authorizeRequests
                                 .antMatchers("/api/client/**")
                                 .hasAuthority("CLIENT")
+                                .antMatchers("/api/admin/**")
+                                .hasAuthority("ADMIN")
                                 .antMatchers("/api/admin/saveAdmin","/api/auth/**", "/swagger-ui/**","/swagger-ui.html","/swagger-ui/","/v3/api-docs", "/v3/api-docs/swagger-config", "/api/admin/log", "/api/client/auth/*","/api/admin/*").permitAll()
                                 .anyRequest().authenticated()
                 )

@@ -14,20 +14,20 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/filial")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class FilialController {
     private final FilialService filialService;
-    @PostMapping("/admin/saveFilial")
+    @PostMapping("/filial/saveFilial")
     public ResponseEntity<FilialResponse> saveFilial (@RequestBody SaveFilialDto request) throws IOException {
         return ResponseEntity.ok(filialService.saveFilial(request));
     }
 
-    @PostMapping("admin/saveFilialImage")
+    @PostMapping("filial/saveFilialImage")
     public ResponseEntity<FilialResponse> saveFilialImage(@RequestParam Long filialId, @RequestParam MultipartFile imageFile) throws IOException {
         return ResponseEntity.ok(filialService.saveFilialImage(filialId, imageFile));
     }
-    @PutMapping("/admin/updateFilial")
+    @PutMapping("/filial/updateFilial")
     public ResponseEntity<String> updateFilial (@RequestParam Long filial_id, @RequestParam(required = false) String name,
                                                 @RequestParam(required = false) String address,
                                                 @RequestParam(required = false) String mapLink,
@@ -36,12 +36,12 @@ public class FilialController {
         return ResponseEntity.ok(filialService.updateFilial(filial_id, name, address, mapLink, phoneNumber, imageFile));
     }
 
-    @GetMapping("/filialList")
+    @GetMapping("/filial/filialList")
     public ResponseEntity<List<FilialListDto>> filialList(){
         return ResponseEntity.ok(filialService.allFilial());
     }
 
-    @GetMapping("/singleFilial")
+    @GetMapping("/filial/singleFilial")
     public ResponseEntity<SingleFilialDto> singleFilial(@RequestParam Long filial_id){
         return ResponseEntity.ok(filialService.getFilialDetails(filial_id));
     }

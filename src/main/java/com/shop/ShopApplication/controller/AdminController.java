@@ -21,16 +21,7 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
 
-    @PostMapping("/saveAdmin")
-    public ResponseEntity<AdminLoginDto> findUser(@RequestBody AdminLoginDto adminLoginDto) {
-        AuthResponse adminDto = adminService.saveAdmin(adminLoginDto);
-        return ResponseEntity.ok(adminLoginDto);
-    }
 
-    @PostMapping("/log")
-    public ResponseEntity<AdminAuthResponse> login(@RequestBody AdminLoginDto request) {
-        return ResponseEntity.ok(adminService.login(request));
-    }
 
 
     @PostMapping("/employee-registration")

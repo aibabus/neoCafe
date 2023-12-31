@@ -1,7 +1,10 @@
 package com.shop.ShopApplication.controller;
 
+import com.shop.ShopApplication.dto.adminDTO.AdminLoginDto;
 import com.shop.ShopApplication.dto.clientDTO.ClientRegisterDto;
 import com.shop.ShopApplication.dto.employeeDTO.WaiterLoginDto;
+import com.shop.ShopApplication.service.adminService.AdminService;
+import com.shop.ShopApplication.service.adminService.responses.AdminAuthResponse;
 import com.shop.ShopApplication.service.auth.AuthResponse;
 import com.shop.ShopApplication.service.auth.AuthService;
 import com.shop.ShopApplication.service.auth.SendCodeResponse;
@@ -23,6 +26,7 @@ public class AuthController {
     private final AuthService authService;
     private final SmsService smsService;
     private final ClientService clientService;
+    private final AdminService adminService;
 
     @PostMapping("/client/registration")
     public ResponseEntity<ClientAuthResponse> clientRegistration(@RequestBody ClientRegisterDto request){
@@ -71,6 +75,17 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestParam String phoneNumber,
                                               @RequestParam String code) {
         return ResponseEntity.ok(authService.loginWaiter(phoneNumber, code));
+    }
+
+    @PostMapping("/admin/saveAdmin")
+    public ResponseEntity<AdminLoginDto> findUser(@RequestBody AdminLoginDto adminLoginDto) {
+        AuthResponse adminDto = adminService.saveAdmin(adminLoginDto);
+        return ResponseEntity.ok(adminLoginDto);
+    }
+
+    @PostMapping("/admin/log")
+    public ResponseEntity<AdminAuthResponse> login(@RequestBody AdminLoginDto request) {
+        return ResponseEntity.ok(adminService.login(request));
     }
 
 }

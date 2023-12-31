@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TableRepository extends JpaRepository<RestaurantTable, Long> {
     List<RestaurantTable> findAll();
+
 }
