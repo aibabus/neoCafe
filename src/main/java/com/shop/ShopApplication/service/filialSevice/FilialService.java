@@ -1,8 +1,10 @@
 package com.shop.ShopApplication.service.filialSevice;
 
+import com.shop.ShopApplication.dto.filialDTO.AddWorkingTimeDto;
 import com.shop.ShopApplication.dto.filialDTO.FilialListDto;
 import com.shop.ShopApplication.dto.filialDTO.SaveFilialDto;
 import com.shop.ShopApplication.dto.filialDTO.SingleFilialDto;
+import com.shop.ShopApplication.entity.WorkingTime;
 import com.shop.ShopApplication.service.filialSevice.responses.FilialResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,4 +23,6 @@ public interface FilialService {
                                MultipartFile imageFile) throws IOException;
 
     public FilialResponse saveFilialImage(Long filialId, MultipartFile imageFile) throws IOException;
+    public void deleteWorkingTime(Long workingTime_id);
+    public FilialResponse addWorkingTime(AddWorkingTimeDto workingTime);
 }

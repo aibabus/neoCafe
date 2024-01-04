@@ -193,6 +193,7 @@ public class MenuServiceImp implements MenuService{
                         .unit(dopingRequest.getUnit())
                         .menuProduct(product)
                         .price(dopingRequest.getPrice())
+                        .isCheckBox(dopingRequest.getIsCheckBox())
                         .items(Collections.singletonList(optionalItem.get()))
                         .build();
                 dopings.add(doping);

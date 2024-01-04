@@ -24,6 +24,7 @@ public class Doping {
     private Double quantity;
     private Unit unit;
     private Double price;
+    private Boolean isCheckBox;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

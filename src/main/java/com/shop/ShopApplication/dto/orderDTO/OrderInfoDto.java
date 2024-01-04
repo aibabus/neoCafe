@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class OrderInfoDto {
+    private Long order_id;
     private String menuProductName;
     private String filialImage;
     private String FilialName;

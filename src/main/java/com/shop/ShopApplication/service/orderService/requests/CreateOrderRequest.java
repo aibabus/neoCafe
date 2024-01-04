@@ -13,5 +13,6 @@ public class CreateOrderRequest {
     private double minusBonus;
     private Long filial_id;
     private List<OrderItemDto> orderItems;
+    private boolean isInside;
 
 }

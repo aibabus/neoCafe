@@ -19,5 +19,6 @@ public class SingleOrderInfoDto {
     private List<OrderDetailDto> menuProducts;
     private double minusBonus;
     private double totalPrice;
+    private boolean isInside;
 
 }

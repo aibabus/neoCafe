@@ -121,7 +121,7 @@ public class ClientController {
     @Operation(summary = "Создание нового заказа")
     @PostMapping("/order/createOrder")
     public ResponseEntity<OrderResponse> order(@RequestBody CreateOrderRequest request){
-        return ResponseEntity.ok(orderSevice.createOrder(request.getUserId(), request.getFilial_id(), request.getMinusBonus(), request.getOrderItems()));
+        return ResponseEntity.ok(orderSevice.createOrder(request.getUserId(), request.getFilial_id(), request.getMinusBonus(), request.getOrderItems(), request.isInside()));
     }
     @Operation(summary = "Список всех заказов")
     @GetMapping("/order/allUserOrders")

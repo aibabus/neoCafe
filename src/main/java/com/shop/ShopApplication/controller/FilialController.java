@@ -1,8 +1,10 @@
 package com.shop.ShopApplication.controller;
 
+import com.shop.ShopApplication.dto.filialDTO.AddWorkingTimeDto;
 import com.shop.ShopApplication.dto.filialDTO.FilialListDto;
 import com.shop.ShopApplication.dto.filialDTO.SaveFilialDto;
 import com.shop.ShopApplication.dto.filialDTO.SingleFilialDto;
+import com.shop.ShopApplication.entity.WorkingTime;
 import com.shop.ShopApplication.service.filialSevice.FilialService;
 import com.shop.ShopApplication.service.filialSevice.responses.FilialResponse;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +47,12 @@ public class FilialController {
     public ResponseEntity<SingleFilialDto> singleFilial(@RequestParam Long filial_id){
         return ResponseEntity.ok(filialService.getFilialDetails(filial_id));
     }
-
+    @DeleteMapping("/filial/deleteWorkingTime")
+    public void deleteWorkingTime(@RequestParam Long workingTimeId){
+        filialService.deleteWorkingTime(workingTimeId);
+    }
+    @PostMapping("/filial/addWorkingTime")
+    public ResponseEntity<FilialResponse> addWorkingTime(@RequestBody AddWorkingTimeDto workingTime){
+        return ResponseEntity.ok(filialService.addWorkingTime(workingTime));
+    }
 }

@@ -28,6 +28,7 @@ public class Order {
     private OrderStatus orderStatus;
 
     private boolean isReady;
+    private boolean isInside;
     private double minusBonus;
 
     @ManyToOne

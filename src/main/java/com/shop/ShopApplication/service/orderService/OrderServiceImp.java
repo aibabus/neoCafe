@@ -27,7 +27,7 @@ public class OrderServiceImp implements OrderSevice {
     private final TableRepository tableRepository;
 
     @Override
-    public OrderResponse createOrder(Long user_id, Long filialId, Double minusBonus, List<OrderItemDto> orderItems) {
+    public OrderResponse createOrder(Long user_id, Long filialId, Double minusBonus, List<OrderItemDto> orderItems, boolean isInside) {
         Optional<User> optUser = userRepository.findById(user_id);
         Optional<Filial> optFilial = filialRepository.findById(filialId);
 
@@ -80,6 +80,8 @@ public class OrderServiceImp implements OrderSevice {
                 }
                 detail.setDopings(dopings);
             }
+            orderDetails.add(detail);
+
         }
 
            totalPrice = applyMinusBonus(user, totalPrice, minusBonus);
@@ -89,6 +91,7 @@ public class OrderServiceImp implements OrderSevice {
             order.setOrderStatus(OrderStatus.NEW);
             totalPrice = Math.max(totalPrice, 0.0);
             order.setPrice(totalPrice);
+            order.setInside(isInside);
             order.setOrderDetails(orderDetails);
             orderRepository.save(order);
             userRepository.save(user);
@@ -151,13 +154,17 @@ public class OrderServiceImp implements OrderSevice {
                     totalPrice += doping.getPrice();
                 }
                 detail.setDopings(dopings);
+
             }
+            orderDetails.add(detail);
         }
+
         order.setTable(table);
         order.setUser(user);
         order.setFilial(filial);
         order.setOrderDate(new Date());
         order.setReady(false);
+        order.setInside(true);
         order.setOrderStatus(OrderStatus.NEW);
         totalPrice = Math.max(totalPrice, 0.0);
         order.setPrice(totalPrice);
@@ -206,14 +213,24 @@ public class OrderServiceImp implements OrderSevice {
         orderInfoDto.setMenuProductName(order.getOrderDetails().stream()
                 .map(detail -> detail.getMenuProduct().getName())
                 .collect(Collectors.joining(", ")));
+        orderInfoDto.setOrder_id(order.getOrderId());
         orderInfoDto.setOrderStatus(order.getOrderStatus());
-        orderInfoDto.setFilialName(order.getFilial().getName());
-        orderInfoDto.setFilialImage(order.getFilial().getImage());
+        try {
+            orderInfoDto.setFilialName(order.getFilial().getName());
+        }catch (Exception e){
+            orderInfoDto.setFilialName(null);
+        }
+        try {
+            orderInfoDto.setFilialImage(order.getFilial().getImage());
+        }catch (Exception e){
+            orderInfoDto.setFilialImage(null);
+        }
         orderInfoDto.setOrderDate(order.getOrderDate());
         orderInfoDto.setReady(order.isReady());
 
         return orderInfoDto;
     }
+
     @Override
     public OrderResponse cancelOrder(Long order_id){
         Optional<Order> optionalOrder = orderRepository.findById(order_id);
@@ -280,11 +297,12 @@ public class OrderServiceImp implements OrderSevice {
         // Map the order and its details to DTOs
         SingleOrderInfoDto singleOrderInfoDto = SingleOrderInfoDto.builder()
                 .order_id(order.getOrderId())
-                .filialName(order.getFilial().getName())
+//                .filialName(order.getFilial().getName())
                 .orderDate(order.getOrderDate())
                 .menuProducts(mapOrderDetailsToDto(order.getOrderDetails()))
                 .minusBonus(order.getMinusBonus())
                 .totalPrice(order.getPrice())
+                .isInside(order.isInside())
                 .build();
 
         return singleOrderInfoDto;

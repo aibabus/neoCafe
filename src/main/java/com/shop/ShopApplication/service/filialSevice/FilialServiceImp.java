@@ -2,10 +2,7 @@ package com.shop.ShopApplication.service.filialSevice;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.shop.ShopApplication.dto.filialDTO.FilialListDto;
-import com.shop.ShopApplication.dto.filialDTO.FilialPageListDto;
-import com.shop.ShopApplication.dto.filialDTO.SaveFilialDto;
-import com.shop.ShopApplication.dto.filialDTO.SingleFilialDto;
+import com.shop.ShopApplication.dto.filialDTO.*;
 import com.shop.ShopApplication.entity.Filial;
 import com.shop.ShopApplication.entity.MenuProduct;
 import com.shop.ShopApplication.entity.WorkingTime;
@@ -182,6 +179,29 @@ public class FilialServiceImp implements FilialService{
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void deleteWorkingTime(Long workingTime_id){
+        workingTimeRepository.deleteById(workingTime_id);
+    }
+
+    @Override
+    public FilialResponse addWorkingTime(AddWorkingTimeDto workingTime){
+        Optional<Filial> optionalFilial = filialRepository.findById(workingTime.getFilial_id());
+        Filial filial = optionalFilial.get();
+        WorkingTime workingTime1 = WorkingTime.builder()
+                .monday(workingTime.getMonday())
+                .tuesday(workingTime.getTuesday())
+                .wednesday(workingTime.getWednesday())
+                .thursday(workingTime.getThursday())
+                .friday(workingTime.getFriday())
+                .saturday(workingTime.getSaturday())
+                .sunday(workingTime.getSunday())
+                .filial(filial)
+                .build();
+        workingTimeRepository.save(workingTime1);
+        return FilialResponse.builder().isSucceed(true).build();
     }
 
 }

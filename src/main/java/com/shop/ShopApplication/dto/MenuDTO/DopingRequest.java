@@ -14,6 +14,7 @@ public class DopingRequest {
     private Double quantity;
     private Unit unit;
     private Double price;
+    private Boolean isCheckBox;
     private Long itemId;
 
 }
