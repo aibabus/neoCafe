@@ -1,5 +1,7 @@
 package com.shop.ShopApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,14 +24,17 @@ public class OrderDetail {
     private double price;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "product_id")
     private MenuProduct menuProduct;
 
     @ManyToMany
+    @JsonManagedReference
     @JoinTable(
             name = "order_detail_dopping",
             joinColumns = @JoinColumn(name = "order_detail_id"),

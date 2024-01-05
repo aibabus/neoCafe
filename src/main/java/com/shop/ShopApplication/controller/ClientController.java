@@ -114,7 +114,7 @@ public class ClientController {
 
     @Operation(summary = "Список филиалов вместе со статусами этих филиалов для вкладки филиалы у клиента")
     @GetMapping("/filial/filialStatusList")
-    public ResponseEntity<List<FilialStatusDto>> filialsStatus(){
+    public ResponseEntity<List<FilialStatusDto>> filialStatus(){
         return ResponseEntity.ok(filialStatusService.getFilialStatusForAllFiliales());
     }
 

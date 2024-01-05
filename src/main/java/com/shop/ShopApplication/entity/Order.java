@@ -1,6 +1,7 @@
 package com.shop.ShopApplication.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.shop.ShopApplication.entity.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,7 @@ public class Order {
     @Column(name = "order_end_date")
     private Date orderEndDate;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
 
@@ -50,6 +52,7 @@ public class Order {
     private Filial filial;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "table_id")
     private RestaurantTable table;
 

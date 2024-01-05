@@ -1,13 +1,11 @@
 package com.shop.ShopApplication.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
-
+@EqualsAndHashCode(callSuper = false, exclude = {"users", "workingTime", "menuProducts", "orders", "tables"})
 @Data
 @Builder
 @NoArgsConstructor
@@ -25,18 +23,23 @@ public class Filial {
     private String image;
     private boolean isOpen;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> users;
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private WorkingTime workingTime;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MenuProduct> menuProducts;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "filial", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RestaurantTable> tables;
 

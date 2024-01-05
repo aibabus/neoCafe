@@ -1,13 +1,10 @@
 package com.shop.ShopApplication.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-
+@EqualsAndHashCode(callSuper = false, exclude = {"user", "filial"})
 @Data
 @Builder
 @NoArgsConstructor
