@@ -19,6 +19,6 @@ public class OrderInfoDto {
     private String FilialName;
     private boolean isReady;
     private OrderStatus orderStatus;
-    private Date orderDate;
+    private String orderDate;
 
 }

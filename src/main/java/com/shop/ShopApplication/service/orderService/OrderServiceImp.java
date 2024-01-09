@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -225,7 +227,7 @@ public class OrderServiceImp implements OrderSevice {
         }catch (Exception e){
             orderInfoDto.setFilialImage(null);
         }
-        orderInfoDto.setOrderDate(order.getOrderDate());
+        orderInfoDto.setOrderDate(formatOrderDate(order.getOrderDate()));
         orderInfoDto.setReady(order.isReady());
 
         return orderInfoDto;
@@ -298,7 +300,7 @@ public class OrderServiceImp implements OrderSevice {
         SingleOrderInfoDto singleOrderInfoDto = SingleOrderInfoDto.builder()
                 .order_id(order.getOrderId())
 //                .filialName(order.getFilial().getName())
-                .orderDate(order.getOrderDate())
+                .orderDate(formatOrderDate(order.getOrderDate()))
                 .menuProducts(mapOrderDetailsToDto(order.getOrderDetails()))
                 .minusBonus(order.getMinusBonus())
                 .totalPrice(order.getPrice())
@@ -324,6 +326,26 @@ public class OrderServiceImp implements OrderSevice {
                     .image(product.getImage())
                     .build();
         }).collect(Collectors.toList());
+    }
+
+    private String formatOrderDate(Date orderDate) {
+        Date now = new Date();
+        long duration = now.getTime() - orderDate.getTime();
+
+        if (isWithinLastTwelveHours(duration)) {
+            // If the order was placed within the last 12 hours, format it as "x hours ago"
+            long hours = TimeUnit.MILLISECONDS.toHours(duration);
+            return (hours > 0 ? hours : "< 1") + " часов назад"; // Accounts for durations less than 1 hour
+        } else {
+            // For older orders, format the date as "18 January"
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM");
+            return formatter.format(orderDate);
+        }
+    }
+
+    private boolean isWithinLastTwelveHours(long durationMillis) {
+        // Check if the duration is less than or equal to 12 hours
+        return durationMillis <= TimeUnit.HOURS.toMillis(12);
     }
 
 }

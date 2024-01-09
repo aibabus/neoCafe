@@ -15,7 +15,7 @@ import java.util.List;
 public class SingleOrderInfoDto {
     private Long order_id;
     private String filialName;
-    private Date orderDate;
+    private String orderDate;
     private List<OrderDetailDto> menuProducts;
     private double minusBonus;
     private double totalPrice;
